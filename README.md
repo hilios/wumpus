@@ -1,2 +1,3 @@
-# wumpus
-Artificial intelligence agent for the Wumpus game
+# Wumpus
+
+Artificial intelligence agent for the Wumpus game.
