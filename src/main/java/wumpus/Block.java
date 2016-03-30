@@ -1,12 +1,15 @@
+package wumpus;
+
 import java.util.ArrayList;
-import java.util.List;
+
+import wumpus.Environment.*;
 
 /**
  *
  */
 public class Block {
     int x, y, w, h, boundry;
-    ArrayList<WumpusWorld.Items> items = new ArrayList<WumpusWorld.Items>();
+    ArrayList<Items> items = new ArrayList<Items>();
 
     public Block(int position, int width, int height) {
         x = position % width;
@@ -43,7 +46,7 @@ public class Block {
         items.clear();
     }
 
-    public void reset(WumpusWorld.Items item) {
+    public void reset(Items item) {
         if (items.contains(item)) {
             items.remove(item);
         }
@@ -53,15 +56,15 @@ public class Block {
         return items.isEmpty();
     }
 
-    public boolean isHere(WumpusWorld.Items item) {
+    public boolean contains(Items item) {
         return items.contains(item);
     }
 
     public boolean hasDanger() {
-        return items.contains(WumpusWorld.Items.WUMPUS) || items.contains(WumpusWorld.Items.PIT);
+        return items.contains(Items.WUMPUS) || items.contains(Items.PIT);
     }
 
-    public void setItem(WumpusWorld.Items item)  {
+    public void setItem(Items item)  {
         items.add(item);
     }
 }
