@@ -9,7 +9,7 @@ public class Environment {
     }
 
     public enum Perceptions {
-        SCREAM, STENCH, BREEZE, GLITTER, BUMP
+        SCREAM, STENCH, BREEZE, GLITTER, BUMP, NOTHING, NO_ARROWS
     }
 
     public enum Actions {
