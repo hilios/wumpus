@@ -1,9 +1,5 @@
 package wumpus;
 
-import java.util.ArrayList;
-
-import static wumpus.Environment.Actions.GO_FORWARD;
-
 /**
  * Represents the world environment.
  */
@@ -11,21 +7,21 @@ public class Environment {
     /**
      * The items that can be found at the world blocks.
      */
-    public enum Items {
+    public enum Item {
         WUMPUS, PIT, HUNTER, GOLD
     }
 
     /**
      * The perceptions that can be sensed by the player.
      */
-    public enum Perceptions {
+    public enum Perception {
         SCREAM, STENCH, BREEZE, GLITTER, BUMP, NOTHING, NO_ARROWS
     }
 
     /**
      * The actions that the player can take.
      */
-    public enum Actions {
+    public enum Action {
         GO_FORWARD, TURN_LEFT, TURN_RIGHT, GRAB, SHOOT, NO_OP
     }
 
@@ -48,7 +44,7 @@ public class Environment {
         // Score if have picked the gold
         if (player.hasGold()) sum += +1000;
         // Calculate the score for each action
-        for(Actions action : player.getActions()) {
+        for(Action action : player.getActions()) {
             switch (action) {
                 case GO_FORWARD:
                 case TURN_LEFT:
@@ -69,7 +65,7 @@ public class Environment {
      * @param item The item
      * @return The icon
      */
-    public static String getIcon(Items item) {
+    public static String getIcon(Item item) {
         switch (item) {
             case WUMPUS: return "W";
             case HUNTER: return "H";
@@ -84,7 +80,7 @@ public class Environment {
      * @param perception The perception
      * @return The icon
      */
-    public static String getIcon(Perceptions perception) {
+    public static String getIcon(Perception perception) {
         switch (perception) {
             case GLITTER: return "*";
             case STENCH: return "~";

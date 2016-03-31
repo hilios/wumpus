@@ -3,9 +3,9 @@ package wumpus;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import wumpus.Environment.Actions;
-import wumpus.Environment.Items;
-import wumpus.Environment.Perceptions;
+import wumpus.Environment.Action;
+import wumpus.Environment.Item;
+import wumpus.Environment.Perception;
 
 /**
  * The World is a representation of the game board, it handles the position of the peers and the
@@ -63,7 +63,7 @@ public class World {
         agentName = agent.getClass().getName();
 
         for (Player player : run()) {
-            Actions actions = agent.getAction(player);
+            Action actions = agent.getAction(player);
             player.setAction(actions);
         }
     }
@@ -108,7 +108,7 @@ public class World {
      * @param times How many items to be placed.
      * @throws InterruptedException When reaches too many tries
      */
-    private void setRandom(Items item, int times) throws InterruptedException {
+    private void setRandom(Item item, int times) throws InterruptedException {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
@@ -186,10 +186,10 @@ public class World {
         player.setBlock(0, height - 1);
         player.reset();
         // Set the dangers
-        setRandom(Items.WUMPUS, wumpus);
-        setRandom(Items.PIT, pits);
+        setRandom(Item.WUMPUS, wumpus);
+        setRandom(Item.PIT, pits);
         // Set the objective
-        setRandom(Items.GOLD, gold);
+        setRandom(Item.GOLD, gold);
     }
 
     /**
@@ -217,7 +217,7 @@ public class World {
                         default:
                             Block block = getPosition(x, y);
                             String line = " 1 |";
-                            if (block.contains(Items.HUNTER)) {
+                            if (block.contains(Item.HUNTER)) {
                                 line = line.replace("1", Environment.getIcon(player));
                             }
                             // Erase any non-replaced items
@@ -266,35 +266,35 @@ public class World {
                             String line = " 1 2 |";
                             if (z == 1) {
                                 // Renders the second line
-                                if (block.contains(Items.WUMPUS)) {
-                                    line = line.replace("2", Environment.getIcon(Items.WUMPUS));
+                                if (block.contains(Item.WUMPUS)) {
+                                    line = line.replace("2", Environment.getIcon(Item.WUMPUS));
                                 }
-                                if (block.contains(Items.PIT)) {
-                                    line = line.replace("2", Environment.getIcon(Items.PIT));
+                                if (block.contains(Item.PIT)) {
+                                    line = line.replace("2", Environment.getIcon(Item.PIT));
                                 }
-                                if (block.contains(Items.GOLD)) {
-                                    line = line.replace("2", Environment.getIcon(Items.GOLD));
+                                if (block.contains(Item.GOLD)) {
+                                    line = line.replace("2", Environment.getIcon(Item.GOLD));
                                 }
                             } else {
-                                if (block.contains(Items.HUNTER)) {
+                                if (block.contains(Item.HUNTER)) {
                                     line = line.replace("1", Environment.getIcon(player));
                                 }
-                                if (block.contains(Items.GOLD)) {
+                                if (block.contains(Item.GOLD)) {
                                     line = line.replace("2",
-                                            Environment.getIcon(Perceptions.GLITTER));
+                                            Environment.getIcon(Perception.GLITTER));
                                 }
                                 // Mark this block if some of their neighbor has some danger
                                 int[] neighbors = block.getNeighborhood();
                                 for (int s = 0; s < neighbors.length; s++) {
                                     if (neighbors[s] == -1) continue;
                                     Block neighbor = getPosition(neighbors[s]);
-                                    if (neighbor.contains(Items.WUMPUS)) {
+                                    if (neighbor.contains(Item.WUMPUS)) {
                                         line = line.replace("2",
-                                                Environment.getIcon(Perceptions.STENCH));
+                                                Environment.getIcon(Perception.STENCH));
                                     }
-                                    if (neighbor.contains(Items.PIT)) {
+                                    if (neighbor.contains(Item.PIT)) {
                                         line = line.replace("2",
-                                                Environment.getIcon(Perceptions.BREEZE));
+                                                Environment.getIcon(Perception.BREEZE));
                                     }
                                 }
                             }

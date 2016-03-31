@@ -2,14 +2,14 @@ package wumpus;
 
 import java.util.HashSet;
 
-import wumpus.Environment.Items;
+import wumpus.Environment.Item;
 
 /**
  * Describes a single board block, that holds information on what have in.
  */
 public class Block {
     private int x, y, w, h;
-    private HashSet<Items> items = new HashSet<Items>();
+    private HashSet<Item> items = new HashSet<Item>();
 
     /**
      * The Block constructor.
@@ -86,7 +86,7 @@ public class Block {
      * Resets some type of item on this block if has on it.
      * @param item The item to reset
      */
-    public void reset(Items item) {
+    public void reset(Item item) {
         if (items.contains(item)) {
             items.remove(item);
         }
@@ -105,7 +105,7 @@ public class Block {
      * @param item The item to find
      * @return <tt>true</tt> if not contains the given item
      */
-    public boolean contains(Items item) {
+    public boolean contains(Item item) {
         return items.contains(item);
     }
 
@@ -113,7 +113,7 @@ public class Block {
      * Adds an item to this block.
      * @param item The item
      */
-    public void setItem(Items item)  {
+    public void setItem(Item item)  {
         items.add(item);
     }
 }
