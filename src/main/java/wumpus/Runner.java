@@ -38,7 +38,7 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
     public boolean hasNext() {
         Player player = world.getPlayer();
         return iterations < DEFAULT_MAX_ITERATIONS &&
-                player.isAlive() && player.getResult() == Result.WIN;
+                player.isAlive() && player.getResult() != Result.WIN;
     }
 
     /**
