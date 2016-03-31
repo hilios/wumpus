@@ -13,13 +13,15 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
     private static final int DEFAULT_MAX_ITERATIONS = 200;
 
     private final World world;
+    private final String name;
     private int iterations = 0;
 
     /**
      * The runner constructor.
      * @param world The world instance.
      */
-    public Runner(World world) {
+    public Runner(String name, World world) {
+        this.name = name;
         this.world = world;
     }
 
