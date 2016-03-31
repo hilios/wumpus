@@ -16,14 +16,13 @@ public class Player extends Object {
     private final World world;
     private int x, y;
 
-    private boolean completed = false;
-    private boolean gold = false;
-    private int arrows = 3;
-
     private Block block;
     private ArrayList<Perceptions> perceptions = new ArrayList<Perceptions>();
     private ArrayList<Actions> actions = new ArrayList<Actions>();
     private Direction direction = Direction.E;
+    private boolean completed = false;
+    private boolean gold = false;
+    private int arrows = 3;
 
     /**
      * Creates a new Player for the given world.
@@ -34,15 +33,31 @@ public class Player extends Object {
     }
 
     /**
-     *
-     * @return
+     * Get the horizontal position of the player at the board.
+     * @return The X position
      */
     public int getX() {
         return block.getX();
     }
 
+    /**
+     * Get the vertical position of the player at the board.
+     * @return The Y position
+     */
     public int getY() {
         return block.getY();
+    }
+
+    /**
+     * Resets the player state.
+     */
+    protected void reset() {
+        arrows = 3;
+        gold = false;
+        completed = false;
+        direction = Direction.E;
+        perceptions.clear();
+        actions.clear();
     }
 
     /**
