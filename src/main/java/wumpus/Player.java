@@ -34,12 +34,33 @@ public class Player extends Object {
     }
 
     /**
+     *
+     * @return
+     */
+    public int getX() {
+        return block.getX();
+    }
+
+    public int getY() {
+        return block.getY();
+    }
+
+
+    /**
+     * Returns the current block instance.
+     * @return The Block instance
+     */
+    protected Block getBlock() {
+        return block;
+    }
+
+    /**
      * Set the current block of the agent, un-setting the last one and recalculating all perceptions
      * sensed from the new block.
      * @param x The horizontal position at the board
      * @param y The vertical position at the board
      */
-    public void setBlock(int x, int y) {
+    protected void setBlock(int x, int y) {
         // Remove the Hunter from the
         if (block != null) {
             block.reset(Items.HUNTER);
@@ -103,14 +124,6 @@ public class Player extends Object {
     public Direction getDirection() { return direction; }
 
     /**
-     * Returns the current block instance.
-     * @return The Block instance
-     */
-    public Block getBlock() {
-        return block;
-    }
-
-    /**
      * Shoots an arrow and returns the perception of the action.
      * @return The perception of the action, either a Perceptions.SCREAM or Perceptions.NOTHING
      */
@@ -152,7 +165,7 @@ public class Player extends Object {
      * Interacts with the world executing an action.
      * @param action The action to take
      */
-    public void setAction(Actions action) {
+    protected void setAction(Actions action) {
         actions.add(action);
         // Execute the action
         switch (action) {
@@ -258,5 +271,21 @@ public class Player extends Object {
      */
     public boolean hasScream() {
         return perceptions.contains(Perceptions.SCREAM);
+    }
+
+    /**
+     * Returns if agent sees or not a glitter.
+     * @return If has a glitter perception
+     */
+    public boolean hasGlitter() {
+        return perceptions.contains(Perceptions.GLITTER);
+    }
+
+    /**
+     * Renders a game board from the player perspective.
+     * @return The board representation
+     */
+    public String render() {
+        return world.render();
     }
 }
