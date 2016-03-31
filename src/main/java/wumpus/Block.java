@@ -50,23 +50,29 @@ public class Block {
     public int getY() { return y; }
 
     /**
-     * Returns the blocks linear position that share the same borders
-     * @return The neighbors array
+     * Returns the blocks linear position that share the same borders.
+     * <pre>
+     *        N
+     *     W    E
+     *       S
+     * </pre>
+     *
+     * @return The neighbors array with clockwise order {N, E, S, W}
      */
-    public int[] getNeighbors() {
-        int[] neighbors = {-1, -1, -1, 1};
+    public int[] getNeighborhood() {
+        int[] neighborhood = {-1, -1, -1, 1};
 
         int north = y - 1;
         int south = y + 1;
         int west = x - 1;
         int east = x + 1;
 
-        if (north >= 0) neighbors[0] = getIndex(x, north);
-        if (south < h) neighbors[1] = getIndex(x, south);
-        if (west >= 0) neighbors[2] = getIndex(west, y);
-        if (east < w) neighbors[2] = getIndex(east, y);
+        if (north >= 0) neighborhood[0] = getIndex(x, north);
+        if (south < h) neighborhood[2] = getIndex(x, south);
+        if (east < w) neighborhood[1] = getIndex(east, y);
+        if (west >= 0) neighborhood[3] = getIndex(west, y);
 
-        return neighbors;
+        return neighborhood;
     }
 
     /**
