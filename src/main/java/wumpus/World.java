@@ -3,7 +3,9 @@ package wumpus;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import wumpus.Environment.*;
+import wumpus.Environment.Actions;
+import wumpus.Environment.Items;
+import wumpus.Environment.Perceptions;
 
 /**
  * The World is a representation of the game board, it handles the position of the peers and the
@@ -22,6 +24,7 @@ public class World {
     private int pits = DEFAULT_PITS;
     private int wumpus = DEFAULT_WUMPUS;
 
+    private String agentName;
     private final Player player;
     private final Block[] world;
 
@@ -57,10 +60,20 @@ public class World {
      * @throws InterruptedException
      */
     public void execute(Agent agent) throws InterruptedException {
-        for (Player player : run(agent.getName())) {
+        agentName = agent.getClass().getName();
+
+        for (Player player : run()) {
             Actions actions = agent.getAction(player);
             player.setAction(actions);
         }
+    }
+
+    /**
+     * Returns the current agent class name.
+     * @return The agent name
+     */
+    public String getAgentName() {
+        return agentName;
     }
 
     /**
@@ -68,9 +81,9 @@ public class World {
      * @return The plays iteration
      * @throws InterruptedException
      */
-    private Runner run(String name) throws InterruptedException {
+    private Runner run() throws InterruptedException {
         reset();
-        return new Runner(name, this);
+        return new Runner(this);
     }
 
     /**
@@ -169,8 +182,9 @@ public class World {
         for (int i = 0; i < world.length; i++) {
             world[i].reset();
         }
-        // Place player agent
+        // Reset the player agent
         player.setBlock(0, height - 1);
+        player.reset();
         // Set the dangers
         setRandom(Items.WUMPUS, wumpus);
         setRandom(Items.PIT, pits);

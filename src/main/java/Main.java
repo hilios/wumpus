@@ -18,11 +18,10 @@ public class Main {
             wumpus.execute(ai);
 
             // Print the board and score table
-
             System.out.println("Board:");
             System.out.println(wumpus.renderAll());
 
-            System.out.println("Results:");
+            System.out.println("Results for *" + wumpus.getAgentName() + "*:");
             System.out.println(wumpus.renderScore());
 
         } catch (Exception e) {

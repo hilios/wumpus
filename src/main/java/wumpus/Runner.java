@@ -1,10 +1,9 @@
 package wumpus;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import wumpus.Environment.*;
+import wumpus.Environment.Result;
 
 /**
  * The iteration of plays that the player can take until reaches its end.
@@ -13,15 +12,13 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
     private static final int DEFAULT_MAX_ITERATIONS = 200;
 
     private final World world;
-    private final String name;
     private int iterations = 0;
 
     /**
      * The runner constructor.
      * @param world The world instance.
      */
-    public Runner(String name, World world) {
-        this.name = name;
+    public Runner(World world) {
         this.world = world;
     }
 
@@ -58,13 +55,5 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
      */
     public void remove() {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Get how many iterations have been made so far.
-     * @return The amount of iterations
-     */
-    public int getDepth() {
-        return iterations;
     }
 }
