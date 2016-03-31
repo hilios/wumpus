@@ -1,6 +1,5 @@
 package wumpus;
 
-import java.util.Iterator;
 import java.util.Random;
 import wumpus.Environment.*;
 
@@ -17,30 +16,21 @@ public class World {
     private final int width;
     private final int height;
 
+    private int gold = DEFAULT_GOLD;
+    private int pits = DEFAULT_PITS;
+    private int wumpus = DEFAULT_WUMPUS;
+
     private final Player player;
     private final Block[] world;
-
-    /**
-     * Creates a new world with given dimensions and default dangers.
-     * @param width The horizontal constraint of the board
-     * @param height The vertical constraint of the board
-     * @throws InterruptedException
-     * @throws InternalError
-     */
-    public World(int width, int height) throws InterruptedException, InternalError {
-        this(width, height, DEFAULT_WUMPUS, DEFAULT_PITS);
-    }
 
     /**
      * Creates a new world with given dimensions and dangers.
      * @param width The horizontal constraint of the board
      * @param height The vertical constraint of the board
-     * @param wumpus The amount of Wumpus in the board.
-     * @param pits The amount of pits in the board.
      * @throws InterruptedException
      * @throws InternalError
      */
-    public World(int width, int height, int wumpus, int pits) throws InterruptedException,
+    public World(int width, int height) throws InterruptedException,
             InternalError {
         if (width == 1 && height == 1) {
             throw new InternalError("The world size must be greater than 1x1.");
@@ -53,28 +43,55 @@ public class World {
         for (int i = 0; i < width * height; i++) {
             world[i] = new Block(i, width, height);
         }
-        // Place hunter agent
+        // Set the player
         player = new Player(this);
-        player.setBlock(0, height - 1);
-        // Set objectives
-        setRandom(Items.GOLD, DEFAULT_GOLD);
-        setRandom(Items.WUMPUS, wumpus);
-        setRandom(Items.PIT, pits);
+        // Place items at the board
+        reset();
+    }
+
+    /**
+     * Execute an agent that plays the game automatically.
+     * @param agent The agent instance
+     * @throws InterruptedException
+     */
+    public void execute(Agent agent) throws InterruptedException {
+        for (Player player : run(agent.getName())) {
+            Actions actions = agent.getAction(player);
+            player.setAction(actions);
+        }
     }
 
     /**
      * Starts playing until game reachs its end.
-     * @return
+     * @return The plays iteration
+     * @throws InterruptedException
      */
-    public Runner start() {
-        return new Runner(this);
+    private Runner run(String name) throws InterruptedException {
+        reset();
+        return new Runner(name, this);
+    }
+
+    /**
+     * Set the number of pits on the board.
+     * @param value
+     */
+    public void setPits(int value) {
+        pits = value;
+    }
+
+    /**
+     * Set the number of Wumpus on the board.
+     * @param value
+     */
+    public void setWumpus(int value) {
+        wumpus = value;
     }
 
     /**
      * Sets a random position for the a set of items respecting safe blocks.
      * @param item The item to be place
      * @param times How many items to be placed.
-     * @throws Exception
+     * @throws InterruptedException When reaches too many tries
      */
     private void setRandom(Items item, int times) throws InterruptedException {
         Random random = new Random();
@@ -97,7 +114,7 @@ public class World {
                 // Do not loop forever
                 if (tries >= RANDOM_MAX_TRIES) {
                     throw new InterruptedException("Cannot set a random position for item after " +
-                            "many times.");
+                            "many tries, increase the world dimensions.");
                 } else {
                     tries++;
                 }
@@ -106,8 +123,96 @@ public class World {
     }
 
     /**
-     * Renders the game board as an ASCII string.
+     * Returns the board block at given linear position.
+     * @param position The block position
+     * @return The block instance
+     */
+    public Block getPosition(int position) {
+        return world[position];
+    }
+
+    /**
+     * Returns the board block at given 2D position.
+     * @param x The horizontal position
+     * @param y The vertical position
+     * @return The block instance
+     */
+    public Block getPosition(int x, int y) {
+        int i = (x + y * width);
+        return world[i];
+    }
+
+    /**
+     * Returns the player set at this world.
+     * @return The player instance
+     */
+    public Player getPlayer() { return player; }
+
+    /**
+     * Resets the board with custom dangers.
+     * @throws InterruptedException
+     */
+    public void reset() throws InterruptedException {
+        // Reset all blocks
+        for (int i = 0; i < world.length; i++) {
+            world[i].reset();
+        }
+        // Place player agent
+        player.setBlock(0, height - 1);
+        // Set the dangers
+        setRandom(Items.WUMPUS, wumpus);
+        setRandom(Items.PIT, pits);
+        // Set the objective
+        setRandom(Items.GOLD, gold);
+    }
+
+    /**
+     * Renders a simplified version of the game board as an ASCII string.
+     * Each block is has only the hunter:
+     * <pre>
+     *     +---+
+     *     | H |
+     *     +---+
+     * </pre>
      *
+     * @return The board representation
+     */
+    public String render() {
+        StringBuilder render = new StringBuilder();
+
+        for(int y = 0; y < height; y++) {
+            for(int z = 0; z < 2; z++) {
+                for (int x = 0; x < width; x++) {
+                    switch (z) {
+                        case 0:
+                            if (x == 0) render.append("+");
+                            render.append("---+");
+                            break;
+                        default:
+                            Block block = getPosition(x, y);
+                            String line = " 1 |";
+                            if (block.contains(Items.HUNTER)) {
+                                line = line.replace("1", Environment.getIcon(player));
+                            }
+                            // Erase any non-replaced items
+                            line = line.replace("1", " ");
+                            // Draw
+                            if (x == 0) render.append("|");
+                            render.append(line);
+                    }
+                }
+                render.append("\n");
+            }
+        }
+        for (int i = 0; i < width; i++) {
+            if (i == 0) render.append("+");
+            render.append("---+");
+        }
+        return render.toString();
+    }
+
+    /**
+     * Renders the full game board as an ASCII string.
      * Each block is composed by:
      * <pre>
      *     +-----+
@@ -117,9 +222,9 @@ public class World {
      *     D = Danger, P = Perception, H = Hunter
      * </pre>
      *
-     * @return The board representation.
+     * @return The board representation
      */
-    public String render() {
+    public String renderAll() {
         StringBuilder render = new StringBuilder();
 
         for(int y = 0; y < height; y++) {
@@ -185,28 +290,31 @@ public class World {
     }
 
     /**
-     * Returns the board block at given linear position.
-     * @param position The block position
-     * @return The block instance
+     * Renders the score table as a ASCII string.
+     * @return The score table
      */
-    public Block getPosition(int position) {
-        return world[position];
+    public String renderScore() {
+        String scoreTable =
+                "+----------------------------+\n" +
+                "| Outcome | Score    | Steps |\n" +
+                "| ------- | -------- | ----- |\n" +
+                "| xxxxxxx | yyyyyyyy | zzzzz |\n" +
+                "+----------------------------+\n";
+
+        return scoreTable;
     }
 
-    /**
-     * Returns the board block at given 2D position.
-     * @param x The horizontal position
-     * @param y The vertical position
-     * @return The block instance
-     */
-    public Block getPosition(int x, int y) {
-        int i = (x + y * width);
-        return world[i];
-    }
 
     /**
-     * Returns the agent of this world.
-     * @return The agent instance
+     * Returns the game title as a ASCII string.
+     * @return The game title
      */
-    public Player getPlayer() { return player; }
+    public String renderTitle() {
+        return  " _       __                                    _       __           __    __\n" +
+                "| |     / /_  ______ ___  ____  __  _______   | |     / /___  _____/ /___/ /\n" +
+                "| | /| / / / / / __ `__ \\/ __ \\/ / / / ___/   | | /| / / __ \\/ ___/ / __  /\n" +
+                "| |/ |/ / /_/ / / / / / / /_/ / /_/ (__  )    | |/ |/ / /_/ / /  / / /_/ /  \n" +
+                "|__/|__/\\__,_/_/ /_/ /_/ .___/\\__,_/____/     |__/|__/\\____/_/  /_/\\__,_/\n" +
+                "                      /_/";
+    }
 }
