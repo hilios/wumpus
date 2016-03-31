@@ -123,12 +123,22 @@ public class World {
     }
 
     /**
+     * Returns the index from a given 2D position.
+     * @param x The horizontal position
+     * @param y The vertical position
+     * @return The index
+     */
+    public int getIndex(int x, int y) {
+        return (x + y * width);
+    }
+
+    /**
      * Returns the board block at given linear position.
-     * @param position The block position
+     * @param index The block position
      * @return The block instance
      */
-    public Block getPosition(int position) {
-        return world[position];
+    public Block getPosition(int index) {
+        return world[index];
     }
 
     /**
@@ -138,7 +148,7 @@ public class World {
      * @return The block instance
      */
     public Block getPosition(int x, int y) {
-        int i = (x + y * width);
+        int i = getIndex(x, y);
         return world[i];
     }
 

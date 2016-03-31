@@ -29,13 +29,13 @@ public class Block {
      * Returns this block linear position at the board.
      * @return The linear index
      */
-    public int getPosition() { return x + y * w; }
+    public int getIndex() { return x + y * w; }
 
     /**
      * Returns some block linear position from a 2D position.
      * @return The linear index
      */
-    public int getPosition(int x, int y) { return x + y * w; }
+    public int getIndex(int x, int y) { return x + y * w; }
 
     /**
      * Returns the horizontal position of this block at the board.
@@ -61,10 +61,10 @@ public class Block {
         int west = x - 1;
         int east = x + 1;
 
-        if (north >= 0) neighbors[0] = getPosition(x, north);
-        if (south < h) neighbors[1] = getPosition(x, south);
-        if (west >= 0) neighbors[2] = getPosition(west, y);
-        if (east < w) neighbors[2] = getPosition(east, y);
+        if (north >= 0) neighbors[0] = getIndex(x, north);
+        if (south < h) neighbors[1] = getIndex(x, south);
+        if (west >= 0) neighbors[2] = getIndex(west, y);
+        if (east < w) neighbors[2] = getIndex(east, y);
 
         return neighbors;
     }

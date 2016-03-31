@@ -45,7 +45,6 @@ public class Player extends Object {
         return block.getY();
     }
 
-
     /**
      * Returns the current block instance.
      * @return The Block instance
@@ -55,18 +54,29 @@ public class Player extends Object {
     }
 
     /**
-     * Set the current block of the agent, un-setting the last one and recalculating all perceptions
-     * sensed from the new block.
-     * @param x The horizontal position at the board
-     * @param y The vertical position at the board
+     * Set the current block of the agent by its 2D position
+     * @param x The horizontal position
+     * @param y The vertical position
      */
     protected void setBlock(int x, int y) {
+        int index = world.getIndex(x, y);
+        setBlock(index);
+    }
+    /**
+     * Set the current block of the agent, un-setting the last one and recalculating all perceptions
+     * sensed from the new block.
+
+     */
+    protected void setBlock(int index) {
         // Remove the Hunter from the
         if (block != null) {
             block.reset(Items.HUNTER);
         }
-        block = world.getPosition(x, y);
+        block = world.getPosition(index);
         block.setItem(Items.HUNTER);
+        //
+        x = block.getX();
+        y = block.getY();
         // Reset senses
         perceptions.clear();
         // Senses in the current block
@@ -170,7 +180,21 @@ public class Player extends Object {
         // Execute the action
         switch (action) {
             case GO_FORWARD:
-                // TODO: Go to other block
+                int[] neighbors = block.getNeighbors();
+                switch (direction) {
+                    case N:
+                        if (neighbors[0] > -1) setBlock(neighbors[0]);
+                        break;
+                    case W:
+                        if (neighbors[1] > -1) setBlock(neighbors[1]);
+                        break;
+                    case S:
+                        if (neighbors[2] > -1) setBlock(neighbors[2]);
+                        break;
+                    case E:
+                        if (neighbors[3] > -1) setBlock(neighbors[3]);
+                        break;
+                }
                 break;
             case TURN_LEFT:
                 // Mover counter clockwise
