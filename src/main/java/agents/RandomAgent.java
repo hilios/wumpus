@@ -1,4 +1,4 @@
-package ai;
+package agents;
 
 import java.util.Random;
 

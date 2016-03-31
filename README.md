@@ -33,6 +33,16 @@ public class EstimationAgent implements Agent {
 
 The return of the `getAction` method is the next player move. From this method you can access all `Player` perceptions and informations.
 
+To run your custom Agent call it from the `Main` class at some `World` instance.
+
+```java
+// Instantiate the AI agent
+Agent agent = new CustomAgent();
+// Create an world and execute the agent
+World world = new World(4, 4);
+world.execute(agent);
+```
+
 ## Output
 
 ```sh
