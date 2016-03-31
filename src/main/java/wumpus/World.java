@@ -1,6 +1,8 @@
 package wumpus;
 
 import java.util.Random;
+import java.util.regex.Pattern;
+
 import wumpus.Environment.*;
 
 /**
@@ -300,6 +302,18 @@ public class World {
     }
 
     /**
+     * Replaces all string occurrences of a char padding if needed.
+     * @param input The input string
+     * @param oldChar The string to replace
+     * @param newChar The replace string
+     * @return The replaced input string
+     */
+    private String padReplace(String input, String oldChar, String newChar) {
+        Pattern pattern = Pattern.compile(oldChar + "{" + newChar.length() + "}");
+        return pattern.matcher(input).replaceFirst(newChar).replace(oldChar, " ");
+    }
+
+    /**
      * Renders the score table as a ASCII string.
      * @return The score table
      */
@@ -308,9 +322,11 @@ public class World {
                 "+----------------------------+\n" +
                 "| Outcome | Score    | Steps |\n" +
                 "| ------- | -------- | ----- |\n" +
-                "| xxxxxxx | yyyyyyyy | zzzzz |\n" +
+                "| ####### | &&&&&&&& | @@@@@ |\n" +
                 "+----------------------------+\n";
-
+        scoreTable = padReplace(scoreTable, "#", player.getResult().toString());
+        scoreTable = padReplace(scoreTable, "&", Integer.toString(player.getScore()));
+        scoreTable = padReplace(scoreTable, "@", Integer.toString(player.getActions().size()));
         return scoreTable;
     }
 
