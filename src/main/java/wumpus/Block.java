@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import wumpus.Environment.*;
 
 /**
- *
+ * Describes a single board block, that holds information on what have in.
  */
 public class Block {
-    int x, y, w, h, boundry;
-    ArrayList<Items> items = new ArrayList<Items>();
+    private int x, y, w, h, boundry;
+    private ArrayList<Items> items = new ArrayList<Items>();
 
     public Block(int position, int width, int height) {
         x = position % width;
@@ -58,10 +58,6 @@ public class Block {
 
     public boolean contains(Items item) {
         return items.contains(item);
-    }
-
-    public boolean hasDanger() {
-        return items.contains(Items.WUMPUS) || items.contains(Items.PIT);
     }
 
     public void setItem(Items item)  {
