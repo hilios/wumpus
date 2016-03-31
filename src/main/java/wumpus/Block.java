@@ -1,31 +1,58 @@
 package wumpus;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
-import wumpus.Environment.*;
+import wumpus.Environment.Items;
 
 /**
  * Describes a single board block, that holds information on what have in.
  */
 public class Block {
-    private int x, y, w, h, boundry;
-    private ArrayList<Items> items = new ArrayList<Items>();
+    private int x, y, w, h;
+    private HashSet<Items> items = new HashSet<Items>();
 
+    /**
+     * The Block constructor.
+     * @param position The linear position in the board
+     * @param width The width of the board
+     * @param height The height of the board
+     */
     public Block(int position, int width, int height) {
         x = position % width;
         y = position / width;
         w = width;
         h = height;
-        boundry = w * h;
         reset();
     }
 
+    /**
+     * Returns this block linear position at the board.
+     * @return The linear index
+     */
     public int getPosition() { return x + y * w; }
+
+    /**
+     * Returns some block linear position from a 2D position.
+     * @return The linear index
+     */
     public int getPosition(int x, int y) { return x + y * w; }
 
+    /**
+     * Returns the horizontal position of this block at the board.
+     * @return The X position
+     */
     public int getX() { return x; }
+
+    /**
+     * Returns the vertical position of this block at the board.
+     * @return The Y position
+     */
     public int getY() { return y; }
 
+    /**
+     * Returns the blocks linear position that share the same borders
+     * @return The neighbors array
+     */
     public int[] getNeighbors() {
         int[] neighbors = {-1, -1, -1, 1};
 
@@ -42,24 +69,44 @@ public class Block {
         return neighbors;
     }
 
+    /**
+     * Resets all items on this block.
+     */
     public void reset() {
         items.clear();
     }
 
+    /**
+     * Resets some type of item on this block if has on it.
+     * @param item The item to reset
+     */
     public void reset(Items item) {
         if (items.contains(item)) {
             items.remove(item);
         }
     }
 
+    /**
+     * Returns weather this block is empty or not.
+     * @return <tt>true</tt> if contains no items
+     */
     public boolean isEmpty() {
         return items.isEmpty();
     }
 
+    /**
+     * Returns weather this block contains the item or not.
+     * @param item The item to find
+     * @return <tt>true</tt> if not contains the given item
+     */
     public boolean contains(Items item) {
         return items.contains(item);
     }
 
+    /**
+     * Adds an item to this block.
+     * @param item The item
+     */
     public void setItem(Items item)  {
         items.add(item);
     }
