@@ -1,31 +1,33 @@
+package ai;
+
 import java.util.Random;
 
 import wumpus.Agent;
-import wumpus.Environment.Perceptions;
-import wumpus.Environment.Actions;
+import wumpus.Environment;
+import wumpus.Environment.Action;
 import wumpus.Player;
 
 /**
- * The fake agent does random actions.
+ * The fake agent tha implements random actions strategy.
  */
 public class RandomAgent implements Agent {
     public Random random = new Random();
-    public Actions[] actions = {
-            Actions.GO_FORWARD,
-            Actions.GO_FORWARD,
-            Actions.GO_FORWARD,
-            Actions.GO_FORWARD,
-            Actions.TURN_LEFT,
-            Actions.TURN_RIGHT,
-            Actions.GRAB,
-            Actions.SHOOT
+    public Action[] actions = {
+            Action.GO_FORWARD,
+            Action.GO_FORWARD,
+            Action.GO_FORWARD,
+            Action.GO_FORWARD,
+            Action.TURN_LEFT,
+            Action.TURN_RIGHT,
+            Action.GRAB,
+            Action.SHOOT
     };
 
     public String getName() {
         return "Random Agent";
     }
 
-    public Actions getAction(Player player) {
+    public Action getAction(Player player) {
         int x = player.getX();
         int y = player.getY();
         // Feel the perceptions
@@ -39,16 +41,16 @@ public class RandomAgent implements Agent {
             // TODO: Do some action based on the players perception...
         }
 
-        Actions nextAction = actions[random.nextInt(actions.length - 1)];
+        Action nextAction = actions[random.nextInt(actions.length - 1)];
         // Print the board
         StringBuilder perceptions = new StringBuilder();
-        for (Perceptions perception : player.getPerceptions()) {
+        for (Environment.Perception perception : player.getPerceptions()) {
             perceptions.append(" > " + perception.toString());
         }
-
+        // Output actions
         System.out.println(player.render());
         System.out.println("Block: (" + x + "," + y + ")");
-        System.out.println("Perceptions:" + perceptions.toString());
+        System.out.println("Perception:" + perceptions.toString());
         System.out.println("Action: " + nextAction);
         System.out.println("");
 

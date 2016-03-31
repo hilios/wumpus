@@ -1,6 +1,6 @@
 package wumpus;
 
-import wumpus.Environment.Actions;
+import wumpus.Environment.Action;
 
 /**
  * The Agent that controls the player for each play, to be used to implement custom AI strategies.
@@ -11,5 +11,5 @@ public interface Agent {
      * @param player The player instance
      * @return The action to execute
      */
-    public Actions getAction(Player player);
+    public Action getAction(Player player);
 }

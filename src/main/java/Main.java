@@ -1,3 +1,4 @@
+import ai.RandomAgent;
 import wumpus.Agent;
 import wumpus.World;
 
