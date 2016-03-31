@@ -1,24 +1,24 @@
 package wumpus;
 
+import java.util.Iterator;
 import java.util.Random;
 import wumpus.Environment.*;
 
 /**
  * The World is a representation of the game board, it handles the position of the peers and the
- * renderization of it.
+ * render of it.
  */
 public class World {
-    int width;
-    int height;
+    private static final int RANDOM_MAX_TRIES = 20;
+    private static final int DEFAULT_GOLD = 1;
+    private static final int DEFAULT_WUMPUS = 1;
+    private static final int DEFAULT_PITS = 2;
 
-    Agent agent;
-    Block[] world;
+    private final int width;
+    private final int height;
 
-    public static final int RANDOM_MAX_TRIES = 20;
-
-    public static final int DEFAULT_GOLD = 1;
-    public static final int DEFAULT_WUMPUS = 1;
-    public static final int DEFAULT_PITS = 2;
+    private final Player player;
+    private final Block[] world;
 
     /**
      * Creates a new world with given dimensions and default dangers.
@@ -54,12 +54,20 @@ public class World {
             world[i] = new Block(i, width, height);
         }
         // Place hunter agent
-        agent = new Agent(this);
-        agent.setBlock(0, height - 1);
+        player = new Player(this);
+        player.setBlock(0, height - 1);
         // Set objectives
         setRandom(Items.GOLD, DEFAULT_GOLD);
         setRandom(Items.WUMPUS, wumpus);
         setRandom(Items.PIT, pits);
+    }
+
+    /**
+     * Starts playing until game reachs its end.
+     * @return
+     */
+    public Runner start() {
+        return new Runner(this);
     }
 
     /**
@@ -68,11 +76,11 @@ public class World {
      * @param times How many items to be placed.
      * @throws Exception
      */
-    protected void setRandom(Items item, int times) throws InterruptedException {
+    private void setRandom(Items item, int times) throws InterruptedException {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
-        int[] safeBlocks = agent.getBlock().getNeighbors();
+        int[] safeBlocks = player.getBlock().getNeighbors();
 
         for(int i = 0; i < times; i++) {
             Block position;
@@ -125,9 +133,20 @@ public class World {
                         default:
                             Block block = getPosition(x, y);
                             String line = " 1 2 |";
-                            if (z == 0) {
+                            if (z == 1) {
+                                // Renders the second line
+                                if (block.contains(Items.WUMPUS)) {
+                                    line = line.replace("2", Environment.getIcon(Items.WUMPUS));
+                                }
+                                if (block.contains(Items.PIT)) {
+                                    line = line.replace("2", Environment.getIcon(Items.PIT));
+                                }
+                                if (block.contains(Items.GOLD)) {
+                                    line = line.replace("2", Environment.getIcon(Items.GOLD));
+                                }
+                            } else {
                                 if (block.contains(Items.HUNTER)) {
-                                    line = line.replace("1", Environment.getIcon(Items.HUNTER));
+                                    line = line.replace("1", Environment.getIcon(player));
                                 }
                                 if (block.contains(Items.GOLD)) {
                                     line = line.replace("2",
@@ -146,17 +165,6 @@ public class World {
                                         line = line.replace("2",
                                                 Environment.getIcon(Perceptions.BREEZE));
                                     }
-                                }
-                            } else {
-                                // Renders the second line
-                                if (block.contains(Items.WUMPUS)) {
-                                    line = line.replace("2", Environment.getIcon(Items.WUMPUS));
-                                }
-                                if (block.contains(Items.PIT)) {
-                                    line = line.replace("2", Environment.getIcon(Items.PIT));
-                                }
-                                if (block.contains(Items.GOLD)) {
-                                    line = line.replace("2", Environment.getIcon(Items.GOLD));
                                 }
                             }
                             // Erase any non-replaced items
@@ -195,4 +203,10 @@ public class World {
         int i = (x + y * width);
         return world[i];
     }
+
+    /**
+     * Returns the agent of this world.
+     * @return The agent instance
+     */
+    public Player getPlayer() { return player; }
 }
