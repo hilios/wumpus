@@ -1,6 +1,7 @@
 import java.util.Random;
 
 import wumpus.Agent;
+import wumpus.Environment.Perceptions;
 import wumpus.Environment.Actions;
 import wumpus.Player;
 
@@ -40,8 +41,16 @@ public class RandomAgent implements Agent {
 
         Actions nextAction = actions[random.nextInt(actions.length - 1)];
         // Print the board
+        StringBuilder perceptions = new StringBuilder();
+        for (Perceptions perception : player.getPerceptions()) {
+            perceptions.append(" > " + perception.toString());
+        }
+
         System.out.println(player.render());
-        System.out.println(nextAction);
+        System.out.println("Block: (" + x + "," + y + ")");
+        System.out.println("Perceptions:" + perceptions.toString());
+        System.out.println("Action: " + nextAction);
+        System.out.println("");
 
         return nextAction;
     }

@@ -17,10 +17,13 @@ public class Main {
             Agent ai = new RandomAgent();
             wumpus.execute(ai);
 
-            // Print the score table
-            System.out.println("Result");
-            System.out.println(wumpus.renderScore());
+            // Print the board and score table
+
+            System.out.println("Board:");
             System.out.println(wumpus.renderAll());
+
+            System.out.println("Results:");
+            System.out.println(wumpus.renderScore());
 
         } catch (Exception e) {
             throw e;
