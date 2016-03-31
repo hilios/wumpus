@@ -38,9 +38,11 @@ public class RandomAgent implements Agent {
             // TODO: Do some action based on the players perception...
         }
 
+        Actions nextAction = actions[random.nextInt(actions.length - 1)];
         // Print the board
         System.out.println(player.render());
+        System.out.println(nextAction);
 
-        return actions[random.nextInt(actions.length - 1)];
+        return nextAction;
     }
 }
