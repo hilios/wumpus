@@ -97,7 +97,7 @@ public class World {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
-        int[] safeBlocks = player.getBlock().getNeighbors();
+        int[] safeBlocks = player.getBlock().getNeighborhood();
 
         for(int i = 0; i < times; i++) {
             Block position;
@@ -268,7 +268,7 @@ public class World {
                                             Environment.getIcon(Perceptions.GLITTER));
                                 }
                                 // Mark this block if some of their neighbor has some danger
-                                int[] neighbors = block.getNeighbors();
+                                int[] neighbors = block.getNeighborhood();
                                 for (int s = 0; s < neighbors.length; s++) {
                                     if (neighbors[s] == -1) continue;
                                     Block neighbor = getPosition(neighbors[s]);

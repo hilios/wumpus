@@ -83,11 +83,11 @@ public class Player extends Object {
         if (block.contains(Items.GOLD)) {
             perceptions.add(Perceptions.GLITTER);
         }
-        // Get the neighbors and find the senses
-        int[] neighbors = block.getNeighbors();
-        for (int i = 0; i < neighbors.length; i++) {
-            if (neighbors[i] > -1) {
-                Block neighbor = world.getPosition(neighbors[i]);
+        // Get the neighborhood and find the senses
+        int[] neighborhood = block.getNeighborhood();
+        for (int i = 0; i < neighborhood.length; i++) {
+            if (neighborhood[i] > -1) {
+                Block neighbor = world.getPosition(neighborhood[i]);
                 // Sense a breeze when near a pit
                 if (neighbor.contains(Items.PIT)) {
                     perceptions.add(Perceptions.BREEZE);
@@ -140,21 +140,21 @@ public class Player extends Object {
     public Perceptions shootArrow() {
         if (arrows > 0) {
             arrows--;
-            int[] neighbors = getBlock().getNeighbors();
+            int[] neighborhood = getBlock().getNeighborhood();
             // Select the right neighbor to shoot
             Block neighbor = null;
             switch (direction) {
                 case N:
-                    if (neighbors[0] > -1) neighbor = world.getPosition(neighbors[0]);
+                    if (neighborhood[0] > -1) neighbor = world.getPosition(neighborhood[0]);
                     break;
                 case E:
-                    if (neighbors[1] > -1) neighbor = world.getPosition(neighbors[1]);
+                    if (neighborhood[1] > -1) neighbor = world.getPosition(neighborhood[1]);
                     break;
                 case S:
-                    if (neighbors[2] > -1) neighbor = world.getPosition(neighbors[2]);
+                    if (neighborhood[2] > -1) neighbor = world.getPosition(neighborhood[2]);
                     break;
                 case W:
-                    if (neighbors[3] > -1) neighbor = world.getPosition(neighbors[3]);
+                    if (neighborhood[3] > -1) neighbor = world.getPosition(neighborhood[3]);
                     break;
             }
             // Hear a scream
@@ -180,19 +180,19 @@ public class Player extends Object {
         // Execute the action
         switch (action) {
             case GO_FORWARD:
-                int[] neighbors = block.getNeighbors();
+                int[] neighborhood = block.getNeighborhood();
                 switch (direction) {
                     case N:
-                        if (neighbors[0] > -1) setBlock(neighbors[0]);
-                        break;
-                    case W:
-                        if (neighbors[1] > -1) setBlock(neighbors[1]);
-                        break;
-                    case S:
-                        if (neighbors[2] > -1) setBlock(neighbors[2]);
+                        if (neighborhood[0] > -1) setBlock(neighborhood[0]);
                         break;
                     case E:
-                        if (neighbors[3] > -1) setBlock(neighbors[3]);
+                        if (neighborhood[1] > -1) setBlock(neighborhood[1]);
+                        break;
+                    case S:
+                        if (neighborhood[2] > -1) setBlock(neighborhood[2]);
+                        break;
+                    case W:
+                        if (neighborhood[3] > -1) setBlock(neighborhood[3]);
                         break;
                 }
                 break;
