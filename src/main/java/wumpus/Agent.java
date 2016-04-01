@@ -11,15 +11,15 @@ public interface Agent {
      * @param player The player instance
      * @return The action to execute
      */
-    public Action getAction(Player player);
+    Action getAction(Player player);
 
     /**
      * Executes before takes the action.
      */
-    public void beforeAction(Player player);
+    void beforeAction(Player player);
 
     /**
      * Executes after taking the action.
      */
-    public void afterAction(Player player);
+    void afterAction(Player player);
 }

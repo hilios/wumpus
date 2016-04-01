@@ -97,18 +97,6 @@ public class Player extends Object {
     }
 
     /**
-     * Returns weather if the player is alive or not
-     * @return The current status
-     */
-    public boolean isAlive() { return alive; }
-
-    /**
-     * Returns weather if the player is dead or not.
-     * @return The current status
-     */
-    public boolean isDead() { return !alive; }
-
-    /**
      * Returns if the player have win or loose the game.
      * @return The outcome of the game
      */
@@ -168,19 +156,20 @@ public class Player extends Object {
         // Execute the action
         switch (action) {
             case GO_FORWARD:
-                int[] neighborhood = block.getNeighborhood();
+                int[] neighbors = block.getNeighborhood();
                 switch (direction) {
                     case N:
-                        if (neighborhood[0] > -1) setBlock(neighborhood[0]);
+                        if (neighbors[0] > -1) setBlock(neighbors[0]);
                         break;
                     case E:
-                        if (neighborhood[1] > -1) setBlock(neighborhood[1]);
+                        if (neighbors[1] > -1) setBlock(neighbors[1]);
                         break;
                     case S:
-                        if (neighborhood[2] > -1) setBlock(neighborhood[2]);
+                        if (neighbors[2] > -1) setBlock(neighbors[2]);
                         break;
                     case W:
-                        if (neighborhood[3] > -1) setBlock(neighborhood[3]);
+
+                        if (neighbors[3] > -1) setBlock(neighbors[3]);
                         break;
                 }
                 break;
@@ -286,6 +275,18 @@ public class Player extends Object {
             }
         }
     }
+
+    /**
+     * Returns weather if the player is alive or not
+     * @return The current status
+     */
+    public boolean isAlive() { return alive; }
+
+    /**
+     * Returns weather if the player is dead or not.
+     * @return The current status
+     */
+    public boolean isDead() { return !alive; }
 
     /**
      * Returns if player have picked the gold.

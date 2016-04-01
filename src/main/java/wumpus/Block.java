@@ -66,11 +66,11 @@ public class Block {
         int south = y + 1;
         int west = x - 1;
         int east = x + 1;
-
+        // Boundaries
         if (north >= 0) neighborhood[0] = getIndex(x, north);
-        if (south < h) neighborhood[2] = getIndex(x, south);
-        if (east < w) neighborhood[1] = getIndex(east, y);
-        if (west >= 0) neighborhood[3] = getIndex(west, y);
+        if (south < h)  neighborhood[2] = getIndex(x, south);
+        if (east < w)   neighborhood[1] = getIndex(east, y);
+        if (west >= 0)  neighborhood[3] = getIndex(west, y);
 
         return neighborhood;
     }
