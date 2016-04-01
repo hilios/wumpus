@@ -17,6 +17,8 @@ public class Player extends Object {
     private int x, y;
 
     private Block block;
+
+    private ArrayList<Perception> perceptions = new ArrayList<Perception>();
     private ArrayList<Action> actions = new ArrayList<Action>();
     private Direction direction = Direction.E;
     private boolean completed = false;
@@ -214,7 +216,8 @@ public class Player extends Object {
                 alive = false;
                 break;
         }
-        // TODO: ...
+        // Reprocess all events
+        setPerceptions();
     }
 
     /**
@@ -243,11 +246,18 @@ public class Player extends Object {
     }
 
     /**
-     * Returns the list of perceptions sensed from the current block.
+     * Get the list of perceptions sensed from the current block.
      * @return The list of perceptions
      */
-    public ArrayList<Perception> getPerceptions() {
-        ArrayList<Perception> perceptions = new ArrayList<Perception>();
+    protected ArrayList<Perception> getPerceptions() {
+        return perceptions;
+    }
+
+    /**
+     * Sets the list of perceptions sensed from the current block.
+     */
+    protected void setPerceptions() {
+        perceptions.clear();
         // Senses in the current block
         if (block.contains(Item.GOLD)) {
             perceptions.add(Perception.GLITTER);
@@ -275,7 +285,6 @@ public class Player extends Object {
                 }
             }
         }
-        return perceptions;
     }
 
     /**
@@ -289,7 +298,7 @@ public class Player extends Object {
      * @return If has a bump perception
      */
     public boolean hasBump() {
-        return getPerceptions().contains(Perception.BUMP);
+        return perceptions.contains(Perception.BUMP);
     }
 
     /**
@@ -297,7 +306,7 @@ public class Player extends Object {
      * @return If has a breeze perception
      */
     public boolean hasBreeze() {
-        return getPerceptions().contains(Perception.BREEZE);
+        return perceptions.contains(Perception.BREEZE);
     }
 
     /**
@@ -305,7 +314,7 @@ public class Player extends Object {
      * @return If has a stench perception
      */
     public boolean hasStench() {
-        return getPerceptions().contains(Perception.STENCH);
+        return perceptions.contains(Perception.STENCH);
     }
 
     /**
@@ -313,7 +322,7 @@ public class Player extends Object {
      * @return If has a stench perception
      */
     public boolean hasScream() {
-        return getPerceptions().contains(Perception.SCREAM);
+        return perceptions.contains(Perception.SCREAM);
     }
 
     /**
@@ -321,7 +330,7 @@ public class Player extends Object {
      * @return If has a glitter perception
      */
     public boolean hasGlitter() {
-        return getPerceptions().contains(Perception.GLITTER);
+        return perceptions.contains(Perception.GLITTER);
     }
 
     /**
@@ -344,13 +353,6 @@ public class Player extends Object {
         // Score
         output.append("Score: ").append(getScore()).append("\n");
         // Perceptions
-        StringBuilder perceptions = new StringBuilder();
-        for (Environment.Perception perception : getPerceptions()) {
-            if (perceptions.length() > 0) perceptions.append(", ");
-            perceptions.append(perception);
-        }
-        if (getPerceptions().size() == 0) perceptions.append("N/A");
-        // Merge the strings
         output.append("Perceptions: ").append(perceptions.toString());
 
         return output.toString();
