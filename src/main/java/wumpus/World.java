@@ -1,5 +1,6 @@
 package wumpus;
 
+import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -24,12 +25,15 @@ public class World {
     private int pits = DEFAULT_PITS;
     private int wumpus = DEFAULT_WUMPUS;
 
+    private boolean randomize = true;
+    private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
+
     private String agentName;
     private final Player player;
     private final Block[] world;
 
     /**
-     * Creates a new world with given dimensions and dangers.
+     * Creates a new world with given dimensions.
      * @param width The horizontal constraint of the board
      * @param height The vertical constraint of the board
      * @throws InterruptedException
@@ -50,8 +54,6 @@ public class World {
         }
         // Set the player
         player = new Player(this);
-        // Place items at the board
-        reset();
     }
 
     /**
@@ -98,11 +100,57 @@ public class World {
     }
 
     /**
+     * Sets a pit at given coordinate.
+     * @param x The horizontal coordinate
+     * @param y The vertical coordinate
+     */
+    public void setPit(int x, int y) {
+        setItem(Item.PIT, x, y);
+    }
+
+    /**
      * Set the number of Wumpus on the board.
      * @param value
      */
     public void setWumpus(int value) {
         wumpus = value;
+    }
+
+    /**
+     * Sets a Wumpus at given coordinate.
+     * @param x The horizontal position
+     * @param y The vertical position
+     */
+    public void setWumpus(int x, int y) {
+        setItem(Item.WUMPUS, x, y);
+    }
+
+    /**
+     * Sets the Gold at given coordinate.
+     * @param x The horizontal position
+     * @param y The vertical position
+     */
+    public void setGold(int x, int y) {
+        setItem(Item.GOLD, x, y);
+    }
+
+    /**
+     * Sets the item at given coordinates and saves it for later retrieval.
+     * @param item The item to plate
+     * @param x The horizontal position
+     * @param y The vertical position
+     */
+    private void setItem(Item item, int x, int y) {
+        Block block = getPosition(x, y);
+        if (block.isEmpty()) {
+            block.setItem(item);
+        } else {
+            throw new InternalError("Block is not empty!");
+        }
+        // Saves the items position for later retrieval
+        items.put(block.getIndex(), item);
+        // Turn off randomization
+        randomize = false;
     }
 
     /**
@@ -189,22 +237,29 @@ public class World {
     public int getHeight() { return height; }
 
     /**
-     * Resets the board with custom dangers.
+     * Resets the board.
      * @throws InterruptedException
      */
     public void reset() throws InterruptedException {
         // Reset all blocks
         for (int i = 0; i < world.length; i++) {
-            world[i].reset();
+            world[i].clear();
         }
         // Reset the player agent
         player.setBlock(0, height - 1);
         player.reset();
         // Set the dangers
-        setRandom(Item.WUMPUS, wumpus);
-        setRandom(Item.PIT, pits);
-        // Set the objective
-        setRandom(Item.GOLD, gold);
+        if (randomize) {
+            setRandom(Item.WUMPUS, wumpus);
+            setRandom(Item.PIT, pits);
+            // Set the objective
+            setRandom(Item.GOLD, gold);
+        } else {
+            for (int index : items.keySet()) {
+                Block block = getPosition(index);
+                block.setItem(items.get(index));
+            }
+        }
     }
 
     /**

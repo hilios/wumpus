@@ -24,12 +24,17 @@ public class RandomAgent implements Agent {
     };
 
     public void beforeAction(Player player) {
-        // Do nothing
+        System.out.println(player.render());
+        System.out.println(player.debug());
     }
 
     public void afterAction(Player player) {
-        System.out.println(player.render());
-        System.out.println(player.debug());
+        // Players Last action
+        System.out.println(player.getLastAction());
+        // Show a very happy message
+        if (player.isDead()) {
+            System.out.println("GAME OVER!");
+        }
     }
 
     public Action getAction(Player player) {

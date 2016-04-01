@@ -81,12 +81,11 @@ public class Player extends Object {
     /**
      * Set the current block of the agent, un-setting the last one and recalculating all perceptions
      * sensed from the new block.
-
      */
     protected void setBlock(int index) {
         // Remove the Hunter from the
         if (block != null) {
-            block.reset(Item.HUNTER);
+            block.remove(Item.HUNTER);
         }
         block = world.getPosition(index);
         block.setItem(Item.HUNTER);
@@ -105,7 +104,15 @@ public class Player extends Object {
         // Get the neighborhood and find the senses
         int[] neighborhood = block.getNeighborhood();
         for (int i = 0; i < neighborhood.length; i++) {
-            if (neighborhood[i] > -1) {
+            // Sense bumps
+            if (neighborhood[i] == -1) {
+                if (    (i == 0 && direction == Direction.N) ||
+                        (i == 1 && direction == Direction.E) ||
+                        (i == 2 && direction == Direction.S) ||
+                        (i == 3 && direction == Direction.W)) {
+                    perceptions.add(Perception.BUMP);
+                }
+            } else {
                 Block neighbor = world.getPosition(neighborhood[i]);
                 // Sense a breeze when near a pit
                 if (neighbor.contains(Item.PIT)) {
@@ -114,12 +121,6 @@ public class Player extends Object {
                 // Sense a stench when near a Wumpus
                 if (neighbor.contains(Item.WUMPUS)) {
                     perceptions.add(Perception.STENCH);
-                }
-            } else {
-                // Sense bumps
-                if (i == 0 && direction == Direction.N || i == 1 && direction == Direction.E ||
-                        i == 2 && direction == Direction.S || i == 3 && direction == Direction.W) {
-                    perceptions.add(Perception.BUMP);
                 }
             }
         }
@@ -239,7 +240,7 @@ public class Player extends Object {
             case GRAB:
                 // If block has gold pick and remove from the block
                 if (block.contains(Item.GOLD)) {
-                    block.reset(Item.GOLD);
+                    block.remove(Item.GOLD);
                     gold = true;
                 }
                 break;
@@ -342,23 +343,17 @@ public class Player extends Object {
      */
     public String debug() {
         StringBuilder output = new StringBuilder();
-
         // Players position and direction
         output.append("Position: ").append("(").append(x).append(",").append(y).append(",")
                 .append(direction).append(")").append("\n");
         // Players perception
         output.append("Perceptions:");
         for (Environment.Perception perception : getPerceptions()) {
-            output.append(" > ").append(perception);
+            if (output.length() > 0) output.append(", ");
+            output.append(perception);
         }
         if (getPerceptions().size() == 0) output.append(" N/A");
-        output.append("\n");
-        // Players Last action
-        output.append("Action: ").append(getLastAction()).append("\n");
-        // Show a very happy message
-        if (isDead()) {
-            output.append("GAME OVER!").append("\n");
-        }
+
         return output.toString();
     }
 }

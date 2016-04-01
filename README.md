@@ -10,11 +10,13 @@ To implement your own AI agent you just need to create a custom class that imple
 ```java
 public class EstimationAgent implements Agent {
     /**
-     * Do something before take the action
+     * Do something before take the action, probably debug...
      */
     public void beforeAction(Player player) {
-        // Do nothing
+        System.out.println(player.render());
+        System.out.println(player.debug());
     }
+
     /**
      * Do something with the player
      */
@@ -34,12 +36,17 @@ public class EstimationAgent implements Agent {
 
         return Action.NO_OP;
     }
+
     /**
      * Do something after taking the action, probably debug...
      */
     public void afterAction(Player player) {
-        System.out.println(player.render());
-        System.out.println(player.debug());
+        // Players Last action
+        System.out.println(player.getLastAction());
+        // Show a very happy message
+        if (player.isDead()) {
+            System.out.println("GAME OVER!");
+        }
     }
 }
 ```
@@ -56,9 +63,24 @@ World world = new World(4, 4);
 world.execute(agent);
 ```
 
-## Output
+## Deterministic the board
+
+By default, all the dangers and the gold are setup in random fashion at each run.
+
+You can setup the board as you like by by calling the setters methods:
 
 ```sh
+// Creates a deterministic world
+World world = new World(4, 4);
+world.setWumpus(0, 1);
+world.setPit(2, 2);
+world.setPit(1, 3);
+world.setGold(1, 2);
+```
+
+## Output
+
+```
  _       __                                    _       __           __    __
 | |     / /_  ______ ___  ____  __  _______   | |     / /___  _____/ /___/ /
 | | /| / / / / / __ `__ \/ __ \/ / / / ___/   | | /| / / __ \/ ___/ / __  /

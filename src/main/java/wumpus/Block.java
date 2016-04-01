@@ -22,7 +22,7 @@ public class Block {
         y = position / width;
         w = width;
         h = height;
-        reset();
+        clear();
     }
 
     /**
@@ -78,18 +78,16 @@ public class Block {
     /**
      * Resets all items on this block.
      */
-    public void reset() {
+    public void clear() {
         items.clear();
     }
 
     /**
      * Resets some type of item on this block if has on it.
-     * @param item The item to reset
+     * @param item The item to remove
      */
-    public void reset(Item item) {
-        if (items.contains(item)) {
-            items.remove(item);
-        }
+    public void remove(Item item) {
+        items.remove(item);
     }
 
     /**
