@@ -13,6 +13,7 @@ import wumpus.Environment.Perception;
  * render of it.
  */
 public class World {
+    private static final int DEFAULT_MAX_STEPS = 200;
     private static final int RANDOM_MAX_TRIES = 20;
     private static final int DEFAULT_GOLD = 1;
     private static final int DEFAULT_WUMPUS = 1;
@@ -24,6 +25,7 @@ public class World {
     private int gold = DEFAULT_GOLD;
     private int pits = DEFAULT_PITS;
     private int wumpus = DEFAULT_WUMPUS;
+    private int maxSteps = DEFAULT_MAX_STEPS;
 
     private boolean randomize = true;
     private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
@@ -44,7 +46,6 @@ public class World {
         if (width == 1 && height == 1) {
             throw new InternalError("The world size must be greater than 1x1.");
         }
-
         this.width = width;
         this.height = height;
         // Generate the board grid (WxH)
@@ -82,13 +83,28 @@ public class World {
         return new Runner(this);
     }
 
-
     /**
      * Returns the current agent class name.
      * @return The agent name
      */
     public String getAgentName() {
         return agentName;
+    }
+
+    /**
+     * Returns the
+     * @return
+     */
+    public int getMaxSteps() {
+        return maxSteps;
+    }
+
+    /**
+     * Sets the maximus steps to finish the game.
+     * @param value
+     */
+    public void setMaxSteps(int value) {
+        maxSteps = value;
     }
 
     /**

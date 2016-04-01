@@ -9,10 +9,9 @@ import wumpus.Environment.Result;
  * The iteration of plays that the player can take until reaches its end.
  */
 public class Runner implements Iterable<Player>, Iterator<Player> {
-    private static final int DEFAULT_MAX_ITERATIONS = 200;
-
     private final World world;
     private int iterations = 0;
+    private int maxIterations;
 
     /**
      * The runner constructor.
@@ -20,6 +19,7 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
      */
     public Runner(World world) {
         this.world = world;
+        this.maxIterations = world.getMaxSteps();
     }
 
     /**
@@ -36,7 +36,7 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
      */
     public boolean hasNext() {
         Player player = world.getPlayer();
-        return iterations < DEFAULT_MAX_ITERATIONS &&
+        return iterations < maxIterations &&
                 player.isAlive() && player.getResult() != Result.WIN;
     }
 
