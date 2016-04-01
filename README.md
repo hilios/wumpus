@@ -10,6 +10,12 @@ To implement your own AI agent you just need to create a custom class that imple
 ```java
 public class EstimationAgent implements Agent {
     /**
+     * Do something before take the action
+     */
+    public void beforeAction(Player player) {
+        // Do nothing
+    }
+    /**
      * Do something with the player
      */
     public Action getAction(Player player) {
@@ -27,6 +33,13 @@ public class EstimationAgent implements Agent {
         }
 
         return Action.NO_OP;
+    }
+    /**
+     * Do something after taking the action, probably debug...
+     */
+    public void afterAction(Player player) {
+        System.out.println(player.render());
+        System.out.println(player.debug());
     }
 }
 ```

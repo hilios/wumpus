@@ -12,4 +12,14 @@ public interface Agent {
      * @return The action to execute
      */
     public Action getAction(Player player);
+
+    /**
+     * Executes before takes the action.
+     */
+    public void beforeAction(Player player);
+
+    /**
+     * Executes after taking the action.
+     */
+    public void afterAction(Player player);
 }

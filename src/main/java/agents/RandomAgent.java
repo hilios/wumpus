@@ -23,8 +23,13 @@ public class RandomAgent implements Agent {
             Action.SHOOT
     };
 
-    public String getName() {
-        return "Random Agent";
+    public void beforeAction(Player player) {
+        // Do nothing
+    }
+
+    public void afterAction(Player player) {
+        System.out.println(player.render());
+        System.out.println(player.debug());
     }
 
     public Action getAction(Player player) {
@@ -41,19 +46,6 @@ public class RandomAgent implements Agent {
             // TODO: Do some action based on the players perception...
         }
 
-        Action nextAction = actions[random.nextInt(actions.length - 1)];
-        // Print the board
-        StringBuilder perceptions = new StringBuilder();
-        for (Environment.Perception perception : player.getPerceptions()) {
-            perceptions.append(" > " + perception.toString());
-        }
-        // Output actions
-        System.out.println(player.render());
-        System.out.println("Block: (" + x + "," + y + ")");
-        System.out.println("Perception:" + perceptions.toString());
-        System.out.println("Action: " + nextAction);
-        System.out.println("");
-
-        return nextAction;
+        return actions[random.nextInt(actions.length - 1)];
     }
 }

@@ -63,17 +63,11 @@ public class World {
         agentName = agent.getClass().getName();
 
         for (Player player : run()) {
+            agent.beforeAction(player);
             Action actions = agent.getAction(player);
             player.setAction(actions);
+            agent.afterAction(player);
         }
-    }
-
-    /**
-     * Returns the current agent class name.
-     * @return The agent name
-     */
-    public String getAgentName() {
-        return agentName;
     }
 
     /**
@@ -84,6 +78,15 @@ public class World {
     private Runner run() throws InterruptedException {
         reset();
         return new Runner(this);
+    }
+
+
+    /**
+     * Returns the current agent class name.
+     * @return The agent name
+     */
+    public String getAgentName() {
+        return agentName;
     }
 
     /**
@@ -172,6 +175,18 @@ public class World {
      * @return The player instance
      */
     public Player getPlayer() { return player; }
+
+    /**
+     * Returns the board width.
+     * @return The width
+     */
+    public int getWidth() { return width; }
+
+    /**
+     * Returns the board height.
+     * @return The height
+     */
+    public int getHeight() { return height; }
 
     /**
      * Resets the board with custom dangers.
