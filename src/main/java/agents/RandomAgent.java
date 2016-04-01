@@ -11,8 +11,8 @@ import wumpus.Player;
  * The fake agent tha implements random actions strategy.
  */
 public class RandomAgent implements Agent {
-    public Random random = new Random();
-    public Action[] actions = {
+    public final Random random = new Random();
+    public final Action[] actions = {
             Action.GO_FORWARD,
             Action.GO_FORWARD,
             Action.GO_FORWARD,
@@ -23,11 +23,19 @@ public class RandomAgent implements Agent {
             Action.SHOOT
     };
 
+    /**
+     * Prints the player board and debug message.
+     * @param player The player instance
+     */
     public void beforeAction(Player player) {
         System.out.println(player.render());
         System.out.println(player.debug());
     }
 
+    /**
+     * Prints the last action taken.
+     * @param player The player instance
+     */
     public void afterAction(Player player) {
         // Players Last action
         System.out.println(player.getLastAction());
@@ -37,6 +45,11 @@ public class RandomAgent implements Agent {
         }
     }
 
+    /**
+     * Implements a strategy that takes any random action.
+     * @param player The player instance
+     * @return The next action
+     */
     public Action getAction(Player player) {
         int x = player.getX();
         int y = player.getY();
