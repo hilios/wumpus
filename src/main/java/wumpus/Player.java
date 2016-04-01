@@ -258,6 +258,15 @@ public class Player extends Object {
     }
 
     /**
+     * Returns the last player action or null if none taken.
+     * @return The last action
+     */
+    public Action getLastAction() {
+        if (actions.size() == 0) return null;
+        return actions.get(actions.size() - 1);
+    }
+
+    /**
      * Returns the player score until this point.
      * @return The current score
      */
@@ -325,5 +334,23 @@ public class Player extends Object {
      */
     public String render() {
         return world.render();
+    }
+
+    public String debug() {
+        StringBuilder output = new StringBuilder();
+        // Players position and direction
+        output.append("Position: ").append("(").append(x).append(",").append(y).append(",")
+                .append(direction).append(")").append("\n");
+        // Players perception
+        output.append("Perceptions:");
+        for (Environment.Perception perception : getPerceptions()) {
+            output.append(" > ").append(perception);
+        }
+        if (getPerceptions().size() == 0) output.append(" N/A");
+        output.append("\n");
+        // Players Last action
+        output.append("Action: ").append(getLastAction()).append("\n");
+
+        return output.toString();
     }
 }
