@@ -21,6 +21,7 @@ public class Player extends Object {
     private ArrayList<Action> actions = new ArrayList<Action>();
     private Direction direction = Direction.E;
     private boolean completed = false;
+    private boolean alive = true;
     private boolean gold = false;
     private int arrows = 3;
 
@@ -92,6 +93,9 @@ public class Player extends Object {
         //
         x = block.getX();
         y = block.getY();
+        // Check if player is still alive
+        alive = !(block.contains(Item.WUMPUS) || block.contains(Item.PIT));
+        if (isDead()) return;
         // Reset senses
         perceptions.clear();
         // Senses in the current block
@@ -125,13 +129,13 @@ public class Player extends Object {
      * Returns weather if the player is alive or not
      * @return The current status
      */
-    public boolean isAlive() { return !isDead(); }
+    public boolean isAlive() { return alive; }
 
     /**
      * Returns weather if the player is dead or not.
      * @return The current status
      */
-    public boolean isDead() { return block.contains(Item.WUMPUS) || block.contains(Item.PIT); }
+    public boolean isDead() { return !alive; }
 
     /**
      * Returns if the player have win or loose the game.
@@ -238,6 +242,9 @@ public class Player extends Object {
                     block.reset(Item.GOLD);
                     gold = true;
                 }
+                break;
+            case GIVE_UP:
+                alive = false;
                 break;
         }
     }
