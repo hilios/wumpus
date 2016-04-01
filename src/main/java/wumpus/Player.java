@@ -336,8 +336,13 @@ public class Player extends Object {
         return world.render();
     }
 
+    /**
+     * Returns the player current statuses.
+     * @return The debug string
+     */
     public String debug() {
         StringBuilder output = new StringBuilder();
+
         // Players position and direction
         output.append("Position: ").append("(").append(x).append(",").append(y).append(",")
                 .append(direction).append(")").append("\n");
@@ -350,7 +355,10 @@ public class Player extends Object {
         output.append("\n");
         // Players Last action
         output.append("Action: ").append(getLastAction()).append("\n");
-
+        // Show a very happy message
+        if (isDead()) {
+            output.append("GAME OVER!").append("\n");
+        }
         return output.toString();
     }
 }
