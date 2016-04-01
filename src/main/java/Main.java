@@ -15,8 +15,8 @@ public class Main {
             System.out.println(world.renderTitle());
 
             // Start and execute the AI agent
-            Agent ai = new RandomAgent();
-            world.execute(ai);
+            Agent agent = new RandomAgent();
+            world.execute(agent);
 
             // Print the board and score table
             System.out.println("Board:");
