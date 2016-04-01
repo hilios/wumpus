@@ -60,13 +60,13 @@ public class Block {
      * @return The neighbors array with clockwise order {N, E, S, W}
      */
     public int[] getNeighborhood() {
-        int[] neighborhood = {-1, -1, -1, 1};
-
+        int[] neighborhood = {-1, -1, -1, -1};
+        // Calculate the coordinates to each direction
         int north = y - 1;
         int south = y + 1;
         int west = x - 1;
         int east = x + 1;
-        // Boundaries
+        // Limit the boundaries
         if (north >= 0) neighborhood[0] = getIndex(x, north);
         if (south < h)  neighborhood[2] = getIndex(x, south);
         if (east < w)   neighborhood[1] = getIndex(east, y);
