@@ -17,7 +17,6 @@ public class Player extends Object {
     private int x, y;
 
     private Block block;
-    private ArrayList<Perception> perceptions = new ArrayList<Perception>();
     private ArrayList<Action> actions = new ArrayList<Action>();
     private Direction direction = Direction.E;
     private boolean completed = false;
@@ -57,7 +56,6 @@ public class Player extends Object {
         gold = false;
         completed = false;
         direction = Direction.E;
-        perceptions.clear();
         actions.clear();
     }
 
@@ -89,41 +87,11 @@ public class Player extends Object {
         }
         block = world.getPosition(index);
         block.setItem(Item.HUNTER);
-        //
+        // 2D coordinates
         x = block.getX();
         y = block.getY();
         // Check if player is still alive
         alive = !(block.contains(Item.WUMPUS) || block.contains(Item.PIT));
-        if (isDead()) return;
-        // Reset senses
-        perceptions.clear();
-        // Senses in the current block
-        if (block.contains(Item.GOLD)) {
-            perceptions.add(Perception.GLITTER);
-        }
-        // Get the neighborhood and find the senses
-        int[] neighborhood = block.getNeighborhood();
-        for (int i = 0; i < neighborhood.length; i++) {
-            // Sense bumps
-            if (neighborhood[i] == -1) {
-                if (    (i == 0 && direction == Direction.N) ||
-                        (i == 1 && direction == Direction.E) ||
-                        (i == 2 && direction == Direction.S) ||
-                        (i == 3 && direction == Direction.W)) {
-                    perceptions.add(Perception.BUMP);
-                }
-            } else {
-                Block neighbor = world.getPosition(neighborhood[i]);
-                // Sense a breeze when near a pit
-                if (neighbor.contains(Item.PIT)) {
-                    perceptions.add(Perception.BREEZE);
-                }
-                // Sense a stench when near a Wumpus
-                if (neighbor.contains(Item.WUMPUS)) {
-                    perceptions.add(Perception.STENCH);
-                }
-            }
-        }
     }
 
     /**
@@ -180,13 +148,11 @@ public class Player extends Object {
             // Hear a scream
             if (neighbor != null && neighbor.contains(Item.WUMPUS)) {
                 // Add the Scream to the current perception
-                perceptions.add(Perception.SCREAM);
                 return Perception.SCREAM;
             }
             // Nothing happens
             return Perception.NOTHING;
         } else {
-            perceptions.add(Perception.NO_ARROWS);
             return Perception.NO_ARROWS;
         }
     }
@@ -238,7 +204,7 @@ public class Player extends Object {
                 shootArrow();
                 break;
             case GRAB:
-                // If block has gold pick and remove from the block
+                // If block has gold store and remove from the block
                 if (block.contains(Item.GOLD)) {
                     block.remove(Item.GOLD);
                     gold = true;
@@ -248,6 +214,7 @@ public class Player extends Object {
                 alive = false;
                 break;
         }
+        // TODO: ...
     }
 
     /**
@@ -280,6 +247,34 @@ public class Player extends Object {
      * @return The list of perceptions
      */
     public ArrayList<Perception> getPerceptions() {
+        ArrayList<Perception> perceptions = new ArrayList<Perception>();
+        // Senses in the current block
+        if (block.contains(Item.GOLD)) {
+            perceptions.add(Perception.GLITTER);
+        }
+        // Get the neighborhood and find the senses
+        int[] neighborhood = block.getNeighborhood();
+        for (int i = 0; i < neighborhood.length; i++) {
+            // Sense bumps
+            if (neighborhood[i] == -1) {
+                if (    (i == 0 && direction == Direction.N) ||
+                        (i == 1 && direction == Direction.E) ||
+                        (i == 2 && direction == Direction.S) ||
+                        (i == 3 && direction == Direction.W)) {
+                    perceptions.add(Perception.BUMP);
+                }
+            } else {
+                Block neighbor = world.getPosition(neighborhood[i]);
+                // Sense a breeze when near a pit
+                if (neighbor.contains(Item.PIT)) {
+                    perceptions.add(Perception.BREEZE);
+                }
+                // Sense a stench when near a Wumpus
+                if (neighbor.contains(Item.WUMPUS)) {
+                    perceptions.add(Perception.STENCH);
+                }
+            }
+        }
         return perceptions;
     }
 
@@ -294,7 +289,7 @@ public class Player extends Object {
      * @return If has a bump perception
      */
     public boolean hasBump() {
-        return perceptions.contains(Perception.BUMP);
+        return getPerceptions().contains(Perception.BUMP);
     }
 
     /**
@@ -302,7 +297,7 @@ public class Player extends Object {
      * @return If has a breeze perception
      */
     public boolean hasBreeze() {
-        return perceptions.contains(Perception.BREEZE);
+        return getPerceptions().contains(Perception.BREEZE);
     }
 
     /**
@@ -310,7 +305,7 @@ public class Player extends Object {
      * @return If has a stench perception
      */
     public boolean hasStench() {
-        return perceptions.contains(Perception.STENCH);
+        return getPerceptions().contains(Perception.STENCH);
     }
 
     /**
@@ -318,7 +313,7 @@ public class Player extends Object {
      * @return If has a stench perception
      */
     public boolean hasScream() {
-        return perceptions.contains(Perception.SCREAM);
+        return getPerceptions().contains(Perception.SCREAM);
     }
 
     /**
@@ -326,7 +321,7 @@ public class Player extends Object {
      * @return If has a glitter perception
      */
     public boolean hasGlitter() {
-        return perceptions.contains(Perception.GLITTER);
+        return getPerceptions().contains(Perception.GLITTER);
     }
 
     /**
@@ -343,16 +338,20 @@ public class Player extends Object {
      */
     public String debug() {
         StringBuilder output = new StringBuilder();
-        // Players position and direction
+        // Position and direction
         output.append("Position: ").append("(").append(x).append(",").append(y).append(",")
                 .append(direction).append(")").append("\n");
-        // Players perception
-        output.append("Perceptions:");
+        // Score
+        output.append("Score: ").append(getScore()).append("\n");
+        // Perceptions
+        StringBuilder perceptions = new StringBuilder();
         for (Environment.Perception perception : getPerceptions()) {
-            if (output.length() > 0) output.append(", ");
-            output.append(perception);
+            if (perceptions.length() > 0) perceptions.append(", ");
+            perceptions.append(perception);
         }
-        if (getPerceptions().size() == 0) output.append(" N/A");
+        if (getPerceptions().size() == 0) perceptions.append("N/A");
+        // Merge the strings
+        output.append("Perceptions: ").append(perceptions.toString());
 
         return output.toString();
     }
