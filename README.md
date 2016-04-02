@@ -1,9 +1,11 @@
-# Wumpus
+Wumpus
+======
 
 Artificial intelligence agent for the Wumpus game.
 
 
-## AI Agent
+AI Agent
+--------
 
 To implement your own AI agent you just need to create a custom class that implements the `wumpus.Agent` interface.
 
@@ -61,79 +63,83 @@ Agent agent = new CustomAgent();
 // Create an world and execute the agent
 World world = new World(4, 4);
 world.execute(agent);
+// Print the results
+System.out.println(world.renderScore());
 ```
 
-## Deterministic the board
+##### Output
 
-By default, all the dangers and the gold are setup in random fashion at each run.
+```
+Results for *CustomAgent*:
++----------------------------+
+| Outcome | Score    | Steps |
+| ------- | -------- | ----- |
+| WIN     | 943      | 50    |
++----------------------------+
+```
 
-You can setup the board as you like by by calling the setters methods:
+### Debug
 
-```sh
+There are some methods to aid debug the agent strategy (don't forget `System.out.println`):
+
+```java
+// Renders the player board perspective
+player.render();
+// Return the current
+player.debug();
+// Returns the last action taken null if none
+player.getLastAction();
+```
+
+##### Output
+
+```
++---+---+---+---+
+|   |   |   |   |
++---+---+---+---+
+|   |   |   |   |
++---+---+---+---+
+|   |   |   |   |
++---+---+---+---+
+|   | → |   |   |
++---+---+---+---+
+Position: (1,3,E)
+Score: -1
+Perceptions: [BREEZE]
+GO_FORWARD
+```
+
+
+Deterministic board
+-------------------
+
+By default, all the dangers and the gold are setup in random fashion at each run. You can setup the board as you like by calling the setters methods:
+
+```java
 // Creates a deterministic world
 World world = new World(4, 4);
 world.setWumpus(0, 1);
 world.setPit(2, 2);
-world.setPit(1, 3);
-world.setGold(1, 2);
+world.setPit(3, 0);
+world.setGold(1, 1);
+// Show the board
+System.out.println(world.renderAll());
 ```
 
-## Output
+##### Output
 
 ```
- _       __                                    _       __           __    __
-| |     / /_  ______ ___  ____  __  _______   | |     / /___  _____/ /___/ /
-| | /| / / / / / __ `__ \/ __ \/ / / / ___/   | | /| / / __ \/ ___/ / __  /
-| |/ |/ / /_/ / / / / / / /_/ / /_/ (__  )    | |/ |/ / /_/ / /  / / /_/ /
-|__/|__/\__,_/_/ /_/ /_/ .___/\__,_/____/     |__/|__/\____/_/  /_/\__,_/
-                      /_/
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-| → |   |   |   |
-+---+---+---+---+
-Block: (0,3)
-Perceptions:
-Action: GO_FORWARD
-
-[...]
-
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-|   |   |   |   |
-+---+---+---+---+
-|   | ↑ |   |   |
-+---+---+---+---+
-Block: (1,3)
-Perceptions: > STENCH > BREEZE
-Action: GO_FORWARD
-
-Board:
 +-----+-----+-----+-----+
-|     |     |     |     |
-|   ≈ |     |     |     |
+|     |     |     |   P |
+|   ~ |     |   ≈ |     |
 +-----+-----+-----+-----+
-|   P |     |     |     |
-|     |   ~ |     |     |
-+-----+-----+-----+-----+
-|     |   W |     |   $ |
-|   ≈ | †   |   ≈ |   * |
+|   W |   $ |     |     |
+|     |   * |   ≈ |   ≈ |
 +-----+-----+-----+-----+
 |     |     |   P |     |
-|     |   ~ |     |   ≈ |
+|   ~ |   ≈ |     |   ≈ |
 +-----+-----+-----+-----+
-Results for *ai.RandomAgent*:
-+----------------------------+
-| Outcome | Score    | Steps |
-| ------- | -------- | ----- |
-| LOOSE   | -1005    | 5     |
-+----------------------------+
+|     |     |     |     |
+| →   |     |   ≈ |     |
++-----+-----+-----+-----+
 ```
-
