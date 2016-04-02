@@ -10,7 +10,7 @@ AI Agent
 To implement your own AI agent you just need to create a custom class that implements the `wumpus.Agent` interface.
 
 ```java
-public class EstimationAgent implements Agent {
+public class CustomAgent implements Agent {
     /**
      * Do something before take the action, probably debug...
      */
@@ -23,8 +23,6 @@ public class EstimationAgent implements Agent {
      * Do something with the player
      */
     public Action getAction(Player player) {
-        int x = player.getX();
-        int y = player.getY();
         // Feel the perceptions
         boolean bump = player.hasBump();
         boolean breeze = player.hasBreeze();
