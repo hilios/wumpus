@@ -21,6 +21,7 @@ public class World {
 
     private final int width;
     private final int height;
+    private final int startPosition;
 
     private int gold = DEFAULT_GOLD;
     private int pits = DEFAULT_PITS;
@@ -53,6 +54,8 @@ public class World {
         for (int i = 0; i < width * height; i++) {
             world[i] = new Block(i, width, height);
         }
+        // Saves the start position to check the objective
+        startPosition = getIndex(0, height - 1);
         // Set the player
         player = new Player(this);
     }
@@ -252,6 +255,18 @@ public class World {
      */
     public int getHeight() { return height; }
 
+
+    /**
+     * Returns if the player have win or loose the game.
+     * @return The outcome of the game
+     */
+    public Environment.Result getResult() {
+        if (player.isAlive() && player.hasGold() && player.getBlock().getIndex() == startPosition) {
+            return Environment.Result.WIN;
+        }
+        return Environment.Result.LOOSE;
+    }
+
     /**
      * Resets the board.
      * @throws InterruptedException
@@ -262,7 +277,7 @@ public class World {
             world[i].clear();
         }
         // Reset the player agent
-        player.setBlock(0, height - 1);
+        player.setBlock(startPosition);
         player.reset();
         // Set the dangers
         if (randomize) {
@@ -424,7 +439,7 @@ public class World {
                 "| ------- | -------- | ----- |\n" +
                 "| ####### | &&&&&&&& | @@@@@ |\n" +
                 "+----------------------------+\n";
-        scoreTable = padReplace(scoreTable, "#", player.getResult().toString());
+        scoreTable = padReplace(scoreTable, "#", getResult().toString());
         scoreTable = padReplace(scoreTable, "&", Integer.toString(player.getScore()));
         scoreTable = padReplace(scoreTable, "@", Integer.toString(player.getActions().size()));
         return scoreTable;

@@ -70,15 +70,6 @@ public class Player extends Object {
     }
 
     /**
-     * Set the current block of the agent by its 2D position
-     * @param x The horizontal position
-     * @param y The vertical position
-     */
-    protected void setBlock(int x, int y) {
-        int index = world.getIndex(x, y);
-        setBlock(index);
-    }
-    /**
      * Set the current block of the agent, un-setting the last one and recalculating all perceptions
      * sensed from the new block.
      */
@@ -94,15 +85,6 @@ public class Player extends Object {
         y = block.getY();
         // Check if player is still alive
         alive = !(block.contains(Item.WUMPUS) || block.contains(Item.PIT));
-    }
-
-    /**
-     * Returns if the player have win or loose the game.
-     * @return The outcome of the game
-     */
-    public Result getResult() {
-        if (completed) return Result.WIN;
-        return Result.LOOSE;
     }
 
     /**
@@ -201,8 +183,8 @@ public class Player extends Object {
                     gold = true;
                 }
                 break;
-            case GIVE_UP:
-                alive = false;
+            case END:
+                // alive = false;
                 break;
         }
         // Reprocess all events
