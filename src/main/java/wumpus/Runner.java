@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import wumpus.Environment.Result;
+import wumpus.Environment.Action;
 
 /**
  * The iteration of plays that the player can take until reaches its end.
@@ -36,8 +37,8 @@ public class Runner implements Iterable<Player>, Iterator<Player> {
      */
     public boolean hasNext() {
         Player player = world.getPlayer();
-        return iterations < maxIterations &&
-                player.isAlive() && world.getResult() != Result.WIN;
+        return iterations < maxIterations && world.getResult() != Result.WIN &&
+                player.isAlive() && player.getLastAction() != Action.END;
     }
 
     /**
