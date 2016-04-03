@@ -102,21 +102,21 @@ public class Player extends Object {
     public Perception shootArrow() {
         if (arrows > 0) {
             arrows--;
-            int[] neighborhood = getBlock().getNeighborhood();
+            int[] neighbors = getBlock().getNeighbors();
             // Select the right neighbor to shoot
             Block neighbor = null;
             switch (direction) {
                 case N:
-                    if (neighborhood[0] > -1) neighbor = world.getPosition(neighborhood[0]);
+                    if (neighbors[0] > -1) neighbor = world.getPosition(neighbors[0]);
                     break;
                 case E:
-                    if (neighborhood[1] > -1) neighbor = world.getPosition(neighborhood[1]);
+                    if (neighbors[1] > -1) neighbor = world.getPosition(neighbors[1]);
                     break;
                 case S:
-                    if (neighborhood[2] > -1) neighbor = world.getPosition(neighborhood[2]);
+                    if (neighbors[2] > -1) neighbor = world.getPosition(neighbors[2]);
                     break;
                 case W:
-                    if (neighborhood[3] > -1) neighbor = world.getPosition(neighborhood[3]);
+                    if (neighbors[3] > -1) neighbor = world.getPosition(neighbors[3]);
                     break;
             }
             // Hear a scream
@@ -140,7 +140,7 @@ public class Player extends Object {
         // Execute the action
         switch (action) {
             case GO_FORWARD:
-                int[] neighbors = block.getNeighborhood();
+                int[] neighbors = block.getNeighbors();
                 switch (direction) {
                     case N:
                         if (neighbors[0] > -1) setBlock(neighbors[0]);
@@ -235,11 +235,11 @@ public class Player extends Object {
         if (block.contains(Item.GOLD)) {
             perceptions.add(Perception.GLITTER);
         }
-        // Get the neighborhood and find the senses
-        int[] neighborhood = block.getNeighborhood();
-        for (int i = 0; i < neighborhood.length; i++) {
+        // Get the neighbors and find the senses
+        int[] neighbors = block.getNeighbors();
+        for (int i = 0; i < neighbors.length; i++) {
             // Sense bumps
-            if (neighborhood[i] == -1) {
+            if (neighbors[i] == -1) {
                 if (    (i == 0 && direction == Direction.N) ||
                         (i == 1 && direction == Direction.E) ||
                         (i == 2 && direction == Direction.S) ||
@@ -247,7 +247,7 @@ public class Player extends Object {
                     perceptions.add(Perception.BUMP);
                 }
             } else {
-                Block neighbor = world.getPosition(neighborhood[i]);
+                Block neighbor = world.getPosition(neighbors[i]);
                 // Sense a breeze when near a pit
                 if (neighbor.contains(Item.PIT)) {
                     perceptions.add(Perception.BREEZE);

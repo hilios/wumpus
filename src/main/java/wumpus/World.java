@@ -182,7 +182,7 @@ public class World {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
-        int[] safeBlocks = player.getBlock().getNeighborhood();
+        int[] safeBlocks = player.getBlock().getNeighbors();
 
         for(int i = 0; i < times; i++) {
             Block position;
@@ -385,7 +385,7 @@ public class World {
                                             Environment.getIcon(Perception.GLITTER));
                                 }
                                 // Mark this block if some of their neighbor has some danger
-                                int[] neighbors = block.getNeighborhood();
+                                int[] neighbors = block.getNeighbors();
                                 for (int s = 0; s < neighbors.length; s++) {
                                     if (neighbors[s] == -1) continue;
                                     Block neighbor = getPosition(neighbors[s]);
@@ -443,19 +443,5 @@ public class World {
         scoreTable = padReplace(scoreTable, "&", Integer.toString(player.getScore()));
         scoreTable = padReplace(scoreTable, "@", Integer.toString(player.getActions().size()));
         return scoreTable;
-    }
-
-
-    /**
-     * Returns the game title as a ASCII string.
-     * @return The game title
-     */
-    public String renderTitle() {
-        return  " _       __                                    _       __           __    __\n" +
-                "| |     / /_  ______ ___  ____  __  _______   | |     / /___  _____/ /___/ /\n" +
-                "| | /| / / / / / __ `__ \\/ __ \\/ / / / ___/   | | /| / / __ \\/ ___/ / __  /\n" +
-                "| |/ |/ / /_/ / / / / / / /_/ / /_/ (__  )    | |/ |/ / /_/ / /  / / /_/ /  \n" +
-                "|__/|__/\\__,_/_/ /_/ /_/ .___/\\__,_/____/     |__/|__/\\____/_/  /_/\\__,_/\n" +
-                "                      /_/";
     }
 }

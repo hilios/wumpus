@@ -37,7 +37,7 @@ public class Environment {
      * @param player The player instance
      * @return The current score
      */
-    public static int getScore(Player player) {
+    protected static int getScore(Player player) {
         int sum = 0;
         // Score if have deceased
         if (player.isDead()) sum += -1000;
@@ -65,7 +65,7 @@ public class Environment {
      * @param item The item
      * @return The icon
      */
-    public static String getIcon(Item item) {
+    protected static String getIcon(Item item) {
         switch (item) {
             case WUMPUS: return "W";
             case HUNTER: return "H";
@@ -80,7 +80,7 @@ public class Environment {
      * @param perception The perception
      * @return The icon
      */
-    public static String getIcon(Perception perception) {
+    protected static String getIcon(Perception perception) {
         switch (perception) {
             case GLITTER: return "*";
             case STENCH: return "~";
@@ -94,7 +94,7 @@ public class Environment {
      * @param player The player instance
      * @return The icon
      */
-    public static String getIcon(Player player) {
+    protected static String getIcon(Player player) {
         if (player.isDead()) return "†";
 
         switch (player.getDirection()) {
