@@ -3,8 +3,8 @@ package wumpus;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import wumpus.Environment.Result;
 import wumpus.Environment.Action;
+import wumpus.Environment.Result;
 
 /**
  * The iteration of plays that the player can take until reaches its end.

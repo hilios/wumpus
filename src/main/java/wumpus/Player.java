@@ -2,7 +2,9 @@ package wumpus;
 
 import java.util.ArrayList;
 
-import wumpus.Environment.*;
+import wumpus.Environment.Action;
+import wumpus.Environment.Item;
+import wumpus.Environment.Perception;
 
 /**
  * The Player represents an interactive agent of the game that will manipulate the world and modify
