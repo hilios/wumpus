@@ -7,17 +7,17 @@ import wumpus.Environment.Item;
 /**
  * Describes a single board block, that holds information on what have in.
  */
-public class Block {
+public class Tile {
     private int x, y, w, h;
     private HashSet<Item> items = new HashSet<Item>();
 
     /**
-     * The Block constructor.
+     * The Tile constructor.
      * @param position The linear position in the board
      * @param width The width of the board
      * @param height The height of the board
      */
-    public Block(int position, int width, int height) {
+    public Tile(int position, int width, int height) {
         x = position % width;
         y = position / width;
         w = width;

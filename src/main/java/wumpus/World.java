@@ -33,7 +33,7 @@ public class World {
 
     private String agentName;
     private final Player player;
-    private final Block[] world;
+    private final Tile[] world;
 
     /**
      * Creates a new world with given dimensions.
@@ -50,9 +50,9 @@ public class World {
         this.width = width;
         this.height = height;
         // Generate the board grid (WxH)
-        world = new Block[width * height];
+        world = new Tile[width * height];
         for (int i = 0; i < width * height; i++) {
-            world[i] = new Block(i, width, height);
+            world[i] = new Tile(i, width, height);
         }
         // Saves the start position to check the objective
         startPosition = getIndex(0, height - 1);
@@ -160,14 +160,14 @@ public class World {
      * @param y The vertical position
      */
     private void setItem(Item item, int x, int y) {
-        Block block = getPosition(x, y);
-        if (block.isEmpty()) {
-            block.setItem(item);
+        Tile tile = getPosition(x, y);
+        if (tile.isEmpty()) {
+            tile.setItem(item);
         } else {
-            throw new InternalError("Block is not empty!");
+            throw new InternalError("Tile is not empty!");
         }
         // Saves the items position for later retrieval
-        items.put(block.getIndex(), item);
+        items.put(tile.getIndex(), item);
         // Turn off randomization
         randomize = false;
     }
@@ -182,10 +182,10 @@ public class World {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
-        int[] safeBlocks = player.getBlock().getNeighbors();
+        int[] safeBlocks = player.getTile().getNeighbors();
 
         for(int i = 0; i < times; i++) {
-            Block position;
+            Tile position;
             // Find an empty block to set the item
             while (true) {
                 int z = random.nextInt(width * height - 1);
@@ -222,7 +222,7 @@ public class World {
      * @param index The block position
      * @return The block instance
      */
-    public Block getPosition(int index) {
+    public Tile getPosition(int index) {
         return world[index];
     }
 
@@ -232,7 +232,7 @@ public class World {
      * @param y The vertical position
      * @return The block instance
      */
-    public Block getPosition(int x, int y) {
+    public Tile getPosition(int x, int y) {
         int i = getIndex(x, y);
         return world[i];
     }
@@ -261,7 +261,7 @@ public class World {
      * @return The outcome of the game
      */
     public Environment.Result getResult() {
-        if (player.isAlive() && player.hasGold() && player.getBlock().getIndex() == startPosition) {
+        if (player.isAlive() && player.hasGold() && player.getTile().getIndex() == startPosition) {
             return Environment.Result.WIN;
         }
         return Environment.Result.LOOSE;
@@ -277,7 +277,7 @@ public class World {
             world[i].clear();
         }
         // Reset the player agent
-        player.setBlock(startPosition);
+        player.setTile(startPosition);
         player.reset();
         // Set the dangers
         if (randomize) {
@@ -287,8 +287,8 @@ public class World {
             setRandom(Item.GOLD, gold);
         } else {
             for (int index : items.keySet()) {
-                Block block = getPosition(index);
-                block.setItem(items.get(index));
+                Tile tile = getPosition(index);
+                tile.setItem(items.get(index));
             }
         }
     }
@@ -316,9 +316,9 @@ public class World {
                             render.append("---+");
                             break;
                         default:
-                            Block block = getPosition(x, y);
+                            Tile tile = getPosition(x, y);
                             String line = " 1 |";
-                            if (block.contains(Item.HUNTER)) {
+                            if (tile.contains(Item.HUNTER)) {
                                 line = line.replace("1", Environment.getIcon(player));
                             }
                             // Erase any non-replaced items
@@ -363,32 +363,32 @@ public class World {
                             render.append("-----+");
                             break;
                         default:
-                            Block block = getPosition(x, y);
+                            Tile tile = getPosition(x, y);
                             String line = " 1 2 |";
                             if (z == 1) {
                                 // Renders the second line
-                                if (block.contains(Item.WUMPUS)) {
+                                if (tile.contains(Item.WUMPUS)) {
                                     line = line.replace("2", Environment.getIcon(Item.WUMPUS));
                                 }
-                                if (block.contains(Item.PIT)) {
+                                if (tile.contains(Item.PIT)) {
                                     line = line.replace("2", Environment.getIcon(Item.PIT));
                                 }
-                                if (block.contains(Item.GOLD)) {
+                                if (tile.contains(Item.GOLD)) {
                                     line = line.replace("2", Environment.getIcon(Item.GOLD));
                                 }
                             } else {
-                                if (block.contains(Item.HUNTER)) {
+                                if (tile.contains(Item.HUNTER)) {
                                     line = line.replace("1", Environment.getIcon(player));
                                 }
-                                if (block.contains(Item.GOLD)) {
+                                if (tile.contains(Item.GOLD)) {
                                     line = line.replace("2",
                                             Environment.getIcon(Perception.GLITTER));
                                 }
-                                // Mark this block if some of their neighbor has some danger
-                                int[] neighbors = block.getNeighbors();
+                                // Mark this tile if some of their neighbor has some danger
+                                int[] neighbors = tile.getNeighbors();
                                 for (int s = 0; s < neighbors.length; s++) {
                                     if (neighbors[s] == -1) continue;
-                                    Block neighbor = getPosition(neighbors[s]);
+                                    Tile neighbor = getPosition(neighbors[s]);
                                     if (neighbor.contains(Item.WUMPUS)) {
                                         line = line.replace("2",
                                                 Environment.getIcon(Perception.STENCH));

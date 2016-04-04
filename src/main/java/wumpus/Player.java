@@ -18,7 +18,7 @@ public class Player extends Object {
     private final World world;
     private int x, y;
 
-    private Block block;
+    private Tile tile;
 
     private ArrayList<Perception> perceptions = new ArrayList<Perception>();
     private ArrayList<Action> actions = new ArrayList<Action>();
@@ -41,7 +41,7 @@ public class Player extends Object {
      * @return The X position
      */
     public int getX() {
-        return block.getX();
+        return tile.getX();
     }
 
     /**
@@ -49,7 +49,7 @@ public class Player extends Object {
      * @return The Y position
      */
     public int getY() {
-        return block.getY();
+        return tile.getY();
     }
 
     /**
@@ -64,29 +64,29 @@ public class Player extends Object {
     }
 
     /**
-     * Returns the current block instance.
-     * @return The Block instance
+     * Returns the current tile instance.
+     * @return The Tile instance
      */
-    protected Block getBlock() {
-        return block;
+    protected Tile getTile() {
+        return tile;
     }
 
     /**
-     * Set the current block of the agent, un-setting the last one and recalculating all perceptions
-     * sensed from the new block.
+     * Set the current tile of the agent, un-setting the last one and recalculating all perceptions
+     * sensed from the new tile.
      */
-    protected void setBlock(int index) {
+    protected void setTile(int index) {
         // Remove the Hunter from the
-        if (block != null) {
-            block.remove(Item.HUNTER);
+        if (tile != null) {
+            tile.remove(Item.HUNTER);
         }
-        block = world.getPosition(index);
-        block.setItem(Item.HUNTER);
+        tile = world.getPosition(index);
+        tile.setItem(Item.HUNTER);
         // 2D coordinates
-        x = block.getX();
-        y = block.getY();
+        x = tile.getX();
+        y = tile.getY();
         // Check if player is still alive
-        alive = !(block.contains(Item.WUMPUS) || block.contains(Item.PIT));
+        alive = !(tile.contains(Item.WUMPUS) || tile.contains(Item.PIT));
     }
 
     /**
@@ -102,9 +102,9 @@ public class Player extends Object {
     public Perception shootArrow() {
         if (arrows > 0) {
             arrows--;
-            int[] neighbors = getBlock().getNeighbors();
+            int[] neighbors = getTile().getNeighbors();
             // Select the right neighbor to shoot
-            Block neighbor = null;
+            Tile neighbor = null;
             switch (direction) {
                 case N:
                     if (neighbors[0] > -1) neighbor = world.getPosition(neighbors[0]);
@@ -140,20 +140,20 @@ public class Player extends Object {
         // Execute the action
         switch (action) {
             case GO_FORWARD:
-                int[] neighbors = block.getNeighbors();
+                int[] neighbors = tile.getNeighbors();
                 switch (direction) {
                     case N:
-                        if (neighbors[0] > -1) setBlock(neighbors[0]);
+                        if (neighbors[0] > -1) setTile(neighbors[0]);
                         break;
                     case E:
-                        if (neighbors[1] > -1) setBlock(neighbors[1]);
+                        if (neighbors[1] > -1) setTile(neighbors[1]);
                         break;
                     case S:
-                        if (neighbors[2] > -1) setBlock(neighbors[2]);
+                        if (neighbors[2] > -1) setTile(neighbors[2]);
                         break;
                     case W:
 
-                        if (neighbors[3] > -1) setBlock(neighbors[3]);
+                        if (neighbors[3] > -1) setTile(neighbors[3]);
                         break;
                 }
                 break;
@@ -179,9 +179,9 @@ public class Player extends Object {
                 shootArrow();
                 break;
             case GRAB:
-                // If block has gold store and remove from the block
-                if (block.contains(Item.GOLD)) {
-                    block.remove(Item.GOLD);
+                // If tile has gold store and remove from the tile
+                if (tile.contains(Item.GOLD)) {
+                    tile.remove(Item.GOLD);
                     gold = true;
                 }
                 break;
@@ -219,7 +219,7 @@ public class Player extends Object {
     }
 
     /**
-     * Get the list of perceptions sensed from the current block.
+     * Get the list of perceptions sensed from the current tile.
      * @return The list of perceptions
      */
     protected ArrayList<Perception> getPerceptions() {
@@ -227,16 +227,16 @@ public class Player extends Object {
     }
 
     /**
-     * Sets the list of perceptions sensed from the current block.
+     * Sets the list of perceptions sensed from the current tile.
      */
     protected void setPerceptions() {
         perceptions.clear();
-        // Senses in the current block
-        if (block.contains(Item.GOLD)) {
+        // Senses in the current tile
+        if (tile.contains(Item.GOLD)) {
             perceptions.add(Perception.GLITTER);
         }
         // Get the neighbors and find the senses
-        int[] neighbors = block.getNeighbors();
+        int[] neighbors = tile.getNeighbors();
         for (int i = 0; i < neighbors.length; i++) {
             // Sense bumps
             if (neighbors[i] == -1) {
@@ -247,7 +247,7 @@ public class Player extends Object {
                     perceptions.add(Perception.BUMP);
                 }
             } else {
-                Block neighbor = world.getPosition(neighbors[i]);
+                Tile neighbor = world.getPosition(neighbors[i]);
                 // Sense a breeze when near a pit
                 if (neighbor.contains(Item.PIT)) {
                     perceptions.add(Perception.BREEZE);
