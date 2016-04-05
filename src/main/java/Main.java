@@ -1,3 +1,4 @@
+import agents.HeuristicAgent;
 import agents.RandomAgent;
 import wumpus.Agent;
 import wumpus.World;
@@ -6,13 +7,13 @@ import wumpus.World;
  * Entry point for the application.
  */
 public class Main {
-
     public static void main(String[] args) throws Exception {
         try {
+            // Create a 4x4 world
             World world = new World(4, 4);
 
-            // Print the game title :)
-            System.out.println(world.renderTitle());
+            // Print the game title
+             System.out.println("Wumpus World!");
 
             // Start and execute the AI agent
             Agent agent = new RandomAgent();
@@ -24,9 +25,8 @@ public class Main {
 
             System.out.println("Results for *" + world.getAgentName() + "*:");
             System.out.println(world.renderScore());
-
-        } catch (Exception e) {
-            throw e;
+        } catch (Exception error) {
+            throw error;
         }
     }
 }

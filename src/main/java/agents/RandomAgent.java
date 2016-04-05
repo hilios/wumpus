@@ -3,7 +3,6 @@ package agents;
 import java.util.Random;
 
 import wumpus.Agent;
-import wumpus.Environment;
 import wumpus.Environment.Action;
 import wumpus.Player;
 
