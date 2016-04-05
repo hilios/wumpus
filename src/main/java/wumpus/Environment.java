@@ -1,5 +1,7 @@
 package wumpus;
 
+import java.util.Scanner;
+
 /**
  * Represents the world environment.
  */
@@ -30,6 +32,20 @@ public class Environment {
      */
     public enum Result {
         WIN, LOOSE
+    }
+
+    /**
+     * Blocks the current execution until user hits the ENTER. This method is usefull to
+     * get the step by step actions from the player.
+     */
+    public static void trace() {
+        try {
+            System.out.println("Press ENTER to continue...");
+            Scanner scanner = new Scanner(System.in).useDelimiter("");
+            scanner.next();
+        } catch (Exception error) {
+            // Continue...
+        }
     }
 
     /**

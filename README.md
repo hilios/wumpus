@@ -83,10 +83,12 @@ There are some methods to aid debug the agent strategy (don't forget `System.out
 ```java
 // Renders the player board perspective
 player.render();
-// Return the current
+// Returns current player information
 player.debug();
 // Returns the last action taken null if none
 player.getLastAction();
+// Step-by-step debug
+Environment.trace();
 ```
 
 ##### Output
@@ -101,10 +103,12 @@ player.getLastAction();
 +---+---+---+---+
 |   | → |   |   |
 +---+---+---+---+
+// player.debug()
 Position: (1,3,E)
 Score: -1
 Perceptions: [BREEZE]
 GO_FORWARD
+Press ENTER to continue...
 ```
 
 
