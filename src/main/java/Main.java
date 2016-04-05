@@ -16,7 +16,7 @@ public class Main {
              System.out.println("Wumpus World!");
 
             // Start and execute the AI agent
-            Agent agent = new RandomAgent();
+            Agent agent = new HeuristicAgent(world.getWidth(), world.getHeight());
             world.execute(agent);
 
             // Print the board and score table
