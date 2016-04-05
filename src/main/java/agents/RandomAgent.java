@@ -19,7 +19,7 @@ public class RandomAgent implements Agent {
             Action.TURN_LEFT,
             Action.TURN_RIGHT,
             Action.GRAB,
-            Action.SHOOT
+            Action.SHOOT_ARROW
     };
 
     /**

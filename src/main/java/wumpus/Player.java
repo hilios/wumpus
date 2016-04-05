@@ -119,13 +119,14 @@ public class Player extends Object {
                     if (neighbors[3] > -1) neighbor = world.getPosition(neighbors[3]);
                     break;
             }
-            // Hear a scream
+            // Hear a scream after if killed Wumpus
             if (neighbor != null && neighbor.contains(Item.WUMPUS)) {
+                neighbor.remove(Item.WUMPUS);
                 // Add the Scream to the current perception
                 return Perception.SCREAM;
             }
             // Nothing happens
-            return Perception.NOTHING;
+            return Perception.SHOT_MISSED;
         } else {
             return Perception.NO_ARROWS;
         }
@@ -175,9 +176,6 @@ public class Player extends Object {
                     case W: direction = Direction.N; break;
                 }
                 break;
-            case SHOOT:
-                shootArrow();
-                break;
             case GRAB:
                 // If tile has gold store and remove from the tile
                 if (tile.contains(Item.GOLD)) {
@@ -185,9 +183,10 @@ public class Player extends Object {
                     gold = true;
                 }
                 break;
-            case END:
-                // alive = false;
-                break;
+            case SHOOT_ARROW:
+                Perception perception = shootArrow();
+                setPerceptions(perception);
+                return;
         }
         // Reprocess all events
         setPerceptions();
@@ -258,6 +257,15 @@ public class Player extends Object {
                 }
             }
         }
+    }
+
+    /**
+     * Sets the list of perceptions sensed from the current tile.
+     * @param value The perception to add
+     */
+    protected void setPerceptions(Perception value) {
+        setPerceptions();
+        perceptions.add(value);
     }
 
     /**
