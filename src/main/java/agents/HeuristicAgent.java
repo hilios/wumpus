@@ -21,8 +21,11 @@ import wumpus.Player.Direction;
  */
 public class HeuristicAgent implements Agent {
     private int w, h;
+
+    private boolean debug = true;
     private double[][] dangers;
     private boolean[][] visited;
+    private boolean[][] shoot;
 
     private LinkedList<Action> nextActions = new LinkedList<Action>();
 
@@ -36,6 +39,15 @@ public class HeuristicAgent implements Agent {
         h = height;
         dangers = new double[w][h];
         visited = new boolean[w][h];
+        shoot = new boolean[w][h];
+    }
+
+    /**
+     * Sets weather to show the debug messages or not.
+     * @param value <tt>true</tt> to display messages
+     */
+    public void setDebug(boolean value) {
+        debug = value;
     }
 
     /**
@@ -43,8 +55,10 @@ public class HeuristicAgent implements Agent {
      * @param player The player instance
      */
     public void beforeAction(Player player) {
-        System.out.println(player.render());
-        System.out.println(player.debug());
+        if (debug) {
+            System.out.println(player.render());
+            System.out.println(player.debug());
+        }
     }
 
     /**
@@ -52,14 +66,16 @@ public class HeuristicAgent implements Agent {
      * @param player The player instance
      */
     public void afterAction(Player player) {
-        // Players Last action
-        System.out.println(player.getLastAction());
-        // Show a very happy message
-        if (player.isDead()) {
-            System.out.println("GAME OVER!");
+        if (debug) {
+            // Players Last action
+            System.out.println(player.getLastAction());
+            // Show a very happy message
+            if (player.isDead()) {
+                System.out.println("GAME OVER!");
+            }
+            // Turn on step-by-step
+            Environment.trace();
         }
-        // Turn on step-by-step
-        // Environment.trace();
     }
 
     /**
@@ -88,9 +104,11 @@ public class HeuristicAgent implements Agent {
 
         // Shoot an arrow to every non visited tiles if senses a stench
         if (player.hasStench() && player.hasArrows()) {
+            // Apply killer instinct
             for(int[] branch : branches) {
-                // Killer instinct
-                if (!visited[branch[0]][branch[1]]) {
+                if (!visited[branch[0]][branch[1]] && !shoot[branch[0]][branch[1]]) {
+                    shoot[branch[0]][branch[1]] = true;
+
                     ArrayList<Action> actions = getActionsToShoot(player, branch);
                     nextActions.addAll(actions);
                     return nextActions.poll();
@@ -115,9 +133,6 @@ public class HeuristicAgent implements Agent {
                     if (!visited[branch[0]][branch[1]]) {
                         if (dangers[branch[0]][branch[1]] < 1) {
                             dangers[branch[0]][branch[1]] += 0.5;
-                            System.out.format("> (%d,%d) = ", branch[0], branch[1]);
-                            System.out.println(dangers[branch[0]][branch[1]]);
-
                         }
                         // Pit was found
                         if (dangers[branch[0]][branch[1]] == 1) {
@@ -152,10 +167,11 @@ public class HeuristicAgent implements Agent {
                 currentCost = cost;
                 next = branch;
             }
-            // Debug
-            System.out.format("(%d,%d) = %d%n", branch[0], branch[1], currentCost);
         }
-        System.out.format("Go to (%d,%d)%n", next[0], next[1]);
+        // Print the chosen tile
+        if (debug) {
+            System.out.format("Go to (%d,%d)%n", next[0], next[1]);
+        }
 
         // Execute the action to get to the branch with less cost
         ArrayList<Action> actions = getActionsTo(player, next);
@@ -167,8 +183,8 @@ public class HeuristicAgent implements Agent {
 
     /**
      * Gets the adjacent tiles of the given coordinates.
-     * @param x
-     * @param y
+     * @param x The tile X coordinate
+     * @param y The tile Y coordinate
      * @return An array of 2D coordinates
      */
     private int[][] getNeighbors(int x, int y) {
@@ -234,8 +250,6 @@ public class HeuristicAgent implements Agent {
         // Inverts when facing backwards
         if (from[1] < 0 || dest[0] < 0) theta *= -1;
         if (from[0] < 0 || dest[0] > 0) theta *= -1;
-        // System.out.format("(%d,%d)x(%d,%d) > %.0f = %.0f%n", from[0], from[1], dest[0], dest[1],
-        //      Math.toDegrees(theta), turns);
         // Count how many turns
         return (int)(theta / (Math.PI / 2));
     }
@@ -311,42 +325,5 @@ public class HeuristicAgent implements Agent {
         actions.add(Action.SHOOT_ARROW);
 
         return actions;
-    }
-
-    private String debug(boolean[][] matrix) {
-        StringBuilder output = new StringBuilder();
-        for (int x = 0; x < matrix.length; x++) {
-            for (int y = 0; y < matrix[x].length; y++) {
-                // Transpose...
-                boolean value = matrix[y][x];
-                if (value) {
-                    output.append("T");
-                } else {
-                    output.append("F");
-                }
-                if (y < matrix[x].length - 1) {
-                    output.append(" | ");
-                }
-            }
-            output.append("\n");
-        }
-        return output.toString();
-    }
-
-    private String debug(double[][] matrix) {
-        StringBuilder output = new StringBuilder();
-        for (int x = 0; x < matrix.length; x++) {
-            for (int y = 0; y < matrix[x].length; y++) {
-                // Transpose...
-                double value = matrix[y][x];
-                output.append(Double.toString(value));
-
-                if (y < matrix[x].length - 1) {
-                    output.append(" | ");
-                }
-            }
-            output.append("\n");
-        }
-        return output.toString();
     }
 }

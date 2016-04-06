@@ -10,6 +10,7 @@ import wumpus.Player;
  * The fake agent tha implements random actions strategy.
  */
 public class RandomAgent implements Agent {
+    public boolean debug = true;
     public final Random random = new Random();
     public final Action[] actions = {
             Action.GO_FORWARD,
@@ -23,12 +24,22 @@ public class RandomAgent implements Agent {
     };
 
     /**
+     * Sets weather to show the debug messages or not.
+     * @param value <tt>true</tt> to display messages
+     */
+    public void setDebug(boolean value) {
+        debug = value;
+    }
+
+    /**
      * Prints the player board and debug message.
      * @param player The player instance
      */
     public void beforeAction(Player player) {
-        System.out.println(player.render());
-        System.out.println(player.debug());
+        if (debug) {
+            System.out.println(player.render());
+            System.out.println(player.debug());
+        }
     }
 
     /**
@@ -36,11 +47,13 @@ public class RandomAgent implements Agent {
      * @param player The player instance
      */
     public void afterAction(Player player) {
-        // Players Last action
-        System.out.println(player.getLastAction());
-        // Show a very happy message
-        if (player.isDead()) {
-            System.out.println("GAME OVER!");
+        if (debug) {
+            // Players Last action
+            System.out.println(player.getLastAction());
+            // Show a very happy message
+            if (player.isDead()) {
+                System.out.println("GAME OVER!");
+            }
         }
     }
 
