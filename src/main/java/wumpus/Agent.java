@@ -15,11 +15,14 @@ public interface Agent {
 
     /**
      * Executes before takes the action.
+     * @param player The player instance
      */
     void beforeAction(Player player);
 
     /**
      * Executes after taking the action.
+     * @param player The player instance
      */
     void afterAction(Player player);
+
 }

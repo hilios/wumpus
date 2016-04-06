@@ -13,7 +13,7 @@ public class Main {
             World world = new World(4, 4);
 
             // Print the game title
-             System.out.println("Wumpus World!");
+            System.out.println("Hunt the Wumpus!");
 
             // Start and execute the AI agent
             Agent agent = new HeuristicAgent(world.getWidth(), world.getHeight());
@@ -23,10 +23,10 @@ public class Main {
             System.out.println("Board:");
             System.out.println(world.renderAll());
 
-            System.out.println("Results for *" + world.getAgentName() + "*:");
+            System.out.format("Results for %s:%n", world.getAgentName());
             System.out.println(world.renderScore());
         } catch (Exception error) {
-            throw error;
+            error.printStackTrace();
         }
     }
 }
