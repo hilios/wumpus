@@ -2,7 +2,6 @@ package wumpus;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 import wumpus.Environment.Action;
 import wumpus.Environment.Item;
@@ -33,7 +32,7 @@ public class World {
 
     private String agentName;
     private final Player player;
-    private final Tile[] world;
+    private final Tile[] tiles;
 
     /**
      * Creates a new world with given dimensions.
@@ -49,10 +48,10 @@ public class World {
         }
         this.width = width;
         this.height = height;
-        // Generate the board grid (WxH)
-        world = new Tile[width * height];
+        // Generate the board matrix (WxH)
+        tiles = new Tile[width * height];
         for (int i = 0; i < width * height; i++) {
-            world[i] = new Tile(i, width, height);
+            tiles[i] = new Tile(i, width, height);
         }
         // Saves the start position to check the objective
         startPosition = getIndex(0, height - 1);
@@ -95,8 +94,8 @@ public class World {
     }
 
     /**
-     * Returns the
-     * @return
+     * Returns the maximum steps the player can make before ending the game.
+     * @return The max steps allowed
      */
     public int getMaxSteps() {
         return maxSteps;
@@ -189,7 +188,7 @@ public class World {
             // Find an empty block to set the item
             while (true) {
                 int z = random.nextInt(width * height - 1);
-                position = world[z];
+                position = tiles[z];
                 if(position.isEmpty() &&
                         z != safeBlocks[0] && z != safeBlocks[1]  && z != safeBlocks[2]  &&
                         z != safeBlocks[3]) {
@@ -223,7 +222,7 @@ public class World {
      * @return The block instance
      */
     public Tile getPosition(int index) {
-        return world[index];
+        return tiles[index];
     }
 
     /**
@@ -234,11 +233,11 @@ public class World {
      */
     public Tile getPosition(int x, int y) {
         int i = getIndex(x, y);
-        return world[i];
+        return tiles[i];
     }
 
     /**
-     * Returns the player set at this world.
+     * Returns the current player.
      * @return The player instance
      */
     public Player getPlayer() { return player; }
@@ -273,8 +272,8 @@ public class World {
      */
     public void reset() throws InterruptedException {
         // Reset all blocks
-        for (int i = 0; i < world.length; i++) {
-            world[i].clear();
+        for (int i = 0; i < tiles.length; i++) {
+            tiles[i].clear();
         }
         // Reset the player agent
         player.setTile(startPosition);
