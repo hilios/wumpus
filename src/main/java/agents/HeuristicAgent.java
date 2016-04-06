@@ -51,7 +51,7 @@ public class HeuristicAgent implements Agent {
             System.out.println("GAME OVER!");
         }
         // Step-by-step
-         Environment.trace();
+        Environment.trace();
     }
 
     /**
@@ -76,18 +76,16 @@ public class HeuristicAgent implements Agent {
         if (player.hasGlitter()) return Action.GRAB;
 
         // Shoot an arrow to every non visited tiles if senses a stench
-        if (player.hasStench()) {
-            ArrayList<Direction> killerInstinct = new ArrayList<Direction>();
-
+        if (player.hasStench() && player.hasArrows()) {
             int[][] branches = getNeighbors(x, y);
             for(int[] branch : branches) {
+                // Killer instinct
                 if (!visited[branch[0]][branch[1]]) {
-                    System.out.format("Shoot to (%d,%d)%n", branch[0], branch[1]);
-                    nextActions.add(Action.SHOOT_ARROW);
+                    ArrayList<Action> actions = getActionsToShoot(player, branch);
+                    nextActions.addAll(actions);
+                    return nextActions.poll();
                 }
             }
-
-            return Action.NO_OP;
         }
 
         // Evaluate the cost of neighbor branches
@@ -179,9 +177,9 @@ public class HeuristicAgent implements Agent {
         double dotProduct = from[0] * dest[0] + from[1] * dest[1];
         double lenProduct = Math.hypot(from[0], from[1]) * Math.hypot(dest[0], dest[1]);
         double theta = Math.acos(dotProduct / lenProduct);
-        // Corrects the angle
-        if (from[1] < 0 && dest[0] < 0) theta *= -1;
-        if (from[0] < 0 && dest[1] > 0) theta *= -1;
+        // Inverts when facing backwards
+        if (from[1] < 0 || dest[0] < 0) theta *= -1;
+        if (from[0] < 0 || dest[0] > 0) theta *= -1;
         // System.out.format("(%d,%d)x(%d,%d) > %.0f = %.0f%n", from[0], from[1], dest[0], dest[1],
         //      Math.toDegrees(theta), turns);
         // Count how many turns
@@ -231,6 +229,27 @@ public class HeuristicAgent implements Agent {
         }
         // Go to the block
         actions.add(Action.GO_FORWARD);
+
+        return actions;
+    }
+
+
+    /**
+     * Returns the actions that player must take to reach the given destination.
+     * @param player The player's instance
+     * @param to The destination tile coordinates
+     * @return An array of actions
+     */
+    private ArrayList<Action> getActionsToShoot(Player player, int[] to) {
+        ArrayList<Action> actions = new ArrayList<Action>();
+        int turns = getTurns(player, to);
+        for (int i = 0; i < Math.abs(turns); i++) {
+            if (turns < 0) actions.add(Action.TURN_RIGHT);
+            if (turns > 0) actions.add(Action.TURN_LEFT);
+
+        }
+        // Go to the block
+        actions.add(Action.SHOOT_ARROW);
 
         return actions;
     }
