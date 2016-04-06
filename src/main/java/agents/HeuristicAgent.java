@@ -11,10 +11,17 @@ import wumpus.Player;
 import wumpus.Player.Direction;
 
 /**
- * An Agent that implements a basic estimation strategy.
+ * An Agent that implements a basic heuristic strategy. The heuristic actions are as following:
+ * H1: Grab the gold if sees glitter;
+ * H2: Shoots to every not visited tiles if feels a stench;
+ * H3: Mark the adjacent, not visited tiles has dangerous if feels a breeze;
+ * H4: If do not have gold, choose the branch the non visited branch with less turns to take;
+ * H5: Choose the path that surely does not have a danger;
+ * H5: If have found the gold get back by the visited path;
  */
 public class HeuristicAgent implements Agent {
     private int w, h;
+    private double[][] dangers;
     private boolean[][] visited;
 
     private LinkedList<Action> nextActions = new LinkedList<Action>();
@@ -27,6 +34,7 @@ public class HeuristicAgent implements Agent {
     public HeuristicAgent(int width, int height) {
         w = width;
         h = height;
+        dangers = new double[w][h];
         visited = new boolean[w][h];
     }
 
@@ -50,8 +58,8 @@ public class HeuristicAgent implements Agent {
         if (player.isDead()) {
             System.out.println("GAME OVER!");
         }
-        // Step-by-step
-        Environment.trace();
+        // Turn on step-by-step
+        // Environment.trace();
     }
 
     /**
@@ -75,9 +83,11 @@ public class HeuristicAgent implements Agent {
         // Grab the gold if senses glitter
         if (player.hasGlitter()) return Action.GRAB;
 
+        // Calculate the neighbor branches
+        int[][] branches = getNeighbors(x, y);
+
         // Shoot an arrow to every non visited tiles if senses a stench
         if (player.hasStench() && player.hasArrows()) {
-            int[][] branches = getNeighbors(x, y);
             for(int[] branch : branches) {
                 // Killer instinct
                 if (!visited[branch[0]][branch[1]]) {
@@ -88,10 +98,54 @@ public class HeuristicAgent implements Agent {
             }
         }
 
+        // Mark non visited neighbors has dangerous
+        if (player.hasBreeze()) {
+            boolean knowPitPosition = false;
+            // Verify if a pit was already found
+            for(int[] branch : branches) {
+                if (dangers[branch[0]][branch[1]] == 1) {
+                    knowPitPosition = true;
+                    break;
+                }
+            }
+            // Estimate the pit location
+            if (!knowPitPosition) {
+                // Increase by 50% the probability of having some danger
+                for(int[] branch : branches) {
+                    if (!visited[branch[0]][branch[1]]) {
+                        if (dangers[branch[0]][branch[1]] < 1) {
+                            dangers[branch[0]][branch[1]] += 0.5;
+                            System.out.format("> (%d,%d) = ", branch[0], branch[1]);
+                            System.out.println(dangers[branch[0]][branch[1]]);
+
+                        }
+                        // Pit was found
+                        if (dangers[branch[0]][branch[1]] == 1) {
+                            knowPitPosition = true;
+                        }
+                    }
+                }
+                // If a pit was found clear the dangers from other tiles
+                if (knowPitPosition) {
+                    for (int[] branch : branches) {
+                        if (dangers[branch[0]][branch[1]]  < 1) {
+                            dangers[branch[0]][branch[1]] = 0.0;
+                        }
+                    }
+                }
+            }
+        } else {
+            // From this tile nothing has sensed so set the neighbors to dangers
+            for (int[] branch : branches) {
+                if (dangers[branch[0]][branch[1]] < 1) {
+                    dangers[branch[0]][branch[1]] = 0.0;
+                }
+            }
+        }
+
         // Evaluate the cost of neighbor branches
         int currentCost = 999;
         int[] next = {-1, -1};
-        int[][] branches = getNeighbors(x, y);
         for (int[] branch : branches) {
             int cost = getCost(player, branch);
             if(cost < currentCost) {
@@ -202,7 +256,12 @@ public class HeuristicAgent implements Agent {
         } else {
             // If senses a breeze avoid unvisited path
             if (player.hasBreeze()) {
-                sum += 10;
+                if (dangers[to[0]][to[1]] < 1) {
+                    sum += 10;
+                } else if (dangers[to[0]][to[1]] == 1) {
+                    // Avoid tiles marked as 100% danger
+                    sum += 100;
+                }
             }
         }
 
@@ -265,6 +324,23 @@ public class HeuristicAgent implements Agent {
                 } else {
                     output.append("F");
                 }
+                if (y < matrix[x].length - 1) {
+                    output.append(" | ");
+                }
+            }
+            output.append("\n");
+        }
+        return output.toString();
+    }
+
+    private String debug(double[][] matrix) {
+        StringBuilder output = new StringBuilder();
+        for (int x = 0; x < matrix.length; x++) {
+            for (int y = 0; y < matrix[x].length; y++) {
+                // Transpose...
+                double value = matrix[y][x];
+                output.append(Double.toString(value));
+
                 if (y < matrix[x].length - 1) {
                     output.append(" | ");
                 }
