@@ -261,7 +261,7 @@ public class Player extends Object {
 
     /**
      * Sets the list of perceptions sensed from the current tile.
-     * @param value The perception to add
+     * @param value The perception to add to the list
      */
     protected void setPerceptions(Perception value) {
         setPerceptions();
@@ -270,19 +270,25 @@ public class Player extends Object {
 
     /**
      * Returns weather if the player is alive or not
-     * @return The current status
+     * @return <tt>true</tt> if player's alive.
      */
     public boolean isAlive() { return alive; }
 
     /**
-     * Returns weather if the player is dead or not.
-     * @return The current status
+     * Returns weather the player is dead or not.
+     * @return <tt>true</tt> if player's dead.
      */
     public boolean isDead() { return !alive; }
 
     /**
+     * Returns weather the player has arrows or not.
+     * @return <tt>true</tt> if has arrows.
+     */
+    public boolean hasArrows() { return arrows > 0; }
+
+    /**
      * Returns if player have picked the gold.
-     * @return If picked the gold
+     * @return <tt>true</tt> if has the gold.
      */
     public boolean hasGold() { return gold; }
 
@@ -296,7 +302,7 @@ public class Player extends Object {
 
     /**
      * Returns if agent feels or not a breeze.
-     * @return If has a breeze perception
+     * @return <tt>true</tt> if player's feels a breeze
      */
     public boolean hasBreeze() {
         return perceptions.contains(Perception.BREEZE);
@@ -304,7 +310,7 @@ public class Player extends Object {
 
     /**
      * Returns if agent feels or not a steche.
-     * @return If has a stench perception
+     * @return <tt>true</tt> if player's feels a stench
      */
     public boolean hasStench() {
         return perceptions.contains(Perception.STENCH);
@@ -312,7 +318,7 @@ public class Player extends Object {
 
     /**
      * Returns if agent hear or not a scream.
-     * @return If has a stench perception
+     * @return <tt>true</tt> if player's hears a scream
      */
     public boolean hasScream() {
         return perceptions.contains(Perception.SCREAM);
@@ -320,7 +326,7 @@ public class Player extends Object {
 
     /**
      * Returns if agent sees or not a glitter.
-     * @return If has a glitter perception
+     * @return <tt>true</tt> if player's sees the glitter.
      */
     public boolean hasGlitter() {
         return perceptions.contains(Perception.GLITTER);
