@@ -145,3 +145,9 @@ System.out.println(world.renderAll());
 | →   |     |   ≈ |     |
 +-----+-----+-----+-----+
 ```
+
+### License
+
+Copyright (c) 2016 Edson Hilios. This is a free software is licensed under the MIT License.
+
+*   [Edson Hilios](http://edson.hilios.com.br). Mail me: edson (at) hilios (dot) com (dot) br
