@@ -23,7 +23,6 @@ public class Player extends Object {
     private ArrayList<Perception> perceptions = new ArrayList<Perception>();
     private ArrayList<Action> actions = new ArrayList<Action>();
     private Direction direction = Direction.E;
-    private boolean completed = false;
     private boolean alive = true;
     private boolean gold = false;
     private int arrows = 3;
@@ -58,7 +57,6 @@ public class Player extends Object {
     protected void reset() {
         arrows = 3;
         gold = false;
-        completed = false;
         direction = Direction.E;
         actions.clear();
     }
@@ -126,7 +124,7 @@ public class Player extends Object {
                 return Perception.SCREAM;
             }
             // Nothing happens
-            return Perception.SHOT_MISSED;
+            return null;
         } else {
             return Perception.NO_ARROWS;
         }
@@ -185,7 +183,7 @@ public class Player extends Object {
                 break;
             case SHOOT_ARROW:
                 Perception perception = shootArrow();
-                setPerceptions(perception);
+                if (perception != null) setPerceptions(perception);
                 return;
         }
         // Reprocess all events

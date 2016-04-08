@@ -17,14 +17,14 @@ public class Environment {
      * The perceptions that can be sensed by the player.
      */
     public enum Perception {
-        SCREAM, STENCH, BREEZE, GLITTER, BUMP, SHOT_MISSED, NO_ARROWS
+        SCREAM, STENCH, BREEZE, GLITTER, BUMP, NO_ARROWS
     }
 
     /**
      * The actions that the player can take.
      */
     public enum Action {
-        GO_FORWARD, TURN_LEFT, TURN_RIGHT, GRAB, SHOOT_ARROW, NO_OP, END
+        GO_FORWARD, TURN_LEFT, TURN_RIGHT, GRAB, SHOOT_ARROW, NOOP, END
     }
 
     /**
