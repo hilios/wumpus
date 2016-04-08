@@ -53,12 +53,11 @@ public class Trial {
      * @param trialAgent The agent implementation
      */
     public Trial(String name, World world, TrialAgent trialAgent) {
+        // Create reports folder
+        File reportsFolder = new File(DEFAULT_REPORT_FOLDER);
+        if (!reportsFolder.exists()) reportsFolder.mkdir();
         // Report file path
         String reportFilepath = String.format("%s/%s.csv", DEFAULT_REPORT_FOLDER, name);
-
-        // Create reports folder
-        File reportsFolder = new File(reportFilepath);
-        if (reportsFolder.exists()) reportsFolder.mkdir();
         // Run trial
         long executionTime;
         try {
