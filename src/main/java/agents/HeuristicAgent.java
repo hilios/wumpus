@@ -248,8 +248,12 @@ public class HeuristicAgent implements Agent {
         double lenProduct = Math.hypot(from[0], from[1]) * Math.hypot(dest[0], dest[1]);
         double theta = Math.acos(dotProduct / lenProduct);
         // Inverts when facing backwards
-        if (from[1] < 0 || dest[0] < 0) theta *= -1;
-        if (from[0] < 0 || dest[0] > 0) theta *= -1;
+        if (    player.getDirection() == Direction.N && getDirection(dest) == Direction.E ||
+                player.getDirection() == Direction.E && getDirection(dest) == Direction.S ||
+                player.getDirection() == Direction.S && getDirection(dest) == Direction.W ||
+                player.getDirection() == Direction.W && getDirection(dest) == Direction.N) {
+            theta *= -1;
+        }
         // Count how many turns
         return (int)(theta / (Math.PI / 2));
     }
@@ -325,5 +329,18 @@ public class HeuristicAgent implements Agent {
         actions.add(Action.SHOOT_ARROW);
 
         return actions;
+    }
+
+    /**
+     * Returns the direction based on the vector coordinates
+     * @param coords The 2D coordinates
+     * @return The direction
+     */
+    private Direction getDirection(int[] coords) {
+        if (coords[0] == +0 && coords[1] == +1) return Direction.N;
+        if (coords[0] == +1 && coords[1] == +0) return Direction.E;
+        if (coords[0] == +0 && coords[1] == -1) return Direction.S;
+        if (coords[0] == -1 && coords[1] == +0) return Direction.W;
+        return Direction.E;
     }
 }
