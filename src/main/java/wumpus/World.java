@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import wumpus.Environment.Action;
-import wumpus.Environment.Item;
+import wumpus.Environment.Element;
 import wumpus.Environment.Perception;
 
 /**
@@ -28,7 +28,7 @@ public class World {
     private int maxSteps = DEFAULT_MAX_STEPS;
 
     private boolean randomize = true;
-    private HashMap<Integer, Item> items = new HashMap<Integer, Item>();
+    private HashMap<Integer, Environment.Element> items = new HashMap<Integer, Element>();
 
     private String agentName;
     private final Player player;
@@ -123,7 +123,7 @@ public class World {
      * @param y The vertical coordinate
      */
     public void setPit(int x, int y) {
-        setItem(Item.PIT, x, y);
+        setItem(Element.PIT, x, y);
     }
 
     /**
@@ -140,7 +140,7 @@ public class World {
      * @param y The vertical position
      */
     public void setWumpus(int x, int y) {
-        setItem(Item.WUMPUS, x, y);
+        setItem(Element.WUMPUS, x, y);
     }
 
     /**
@@ -149,35 +149,35 @@ public class World {
      * @param y The vertical position
      */
     public void setGold(int x, int y) {
-        setItem(Item.GOLD, x, y);
+        setItem(Element.GOLD, x, y);
     }
 
     /**
-     * Sets the item at given coordinates and saves it for later retrieval.
-     * @param item The item to plate
+     * Sets the element at given coordinates and saves it for later retrieval.
+     * @param element The element to plate
      * @param x The horizontal position
      * @param y The vertical position
      */
-    private void setItem(Item item, int x, int y) {
+    private void setItem(Element element, int x, int y) {
         Tile tile = getPosition(x, y);
         if (tile.isEmpty()) {
-            tile.setItem(item);
+            tile.setItem(element);
         } else {
             throw new InternalError("Tile is not empty!");
         }
         // Saves the items position for later retrieval
-        items.put(tile.getIndex(), item);
+        items.put(tile.getIndex(), element);
         // Turn off randomization
         randomize = false;
     }
 
     /**
      * Sets a random position for the a set of items respecting safe blocks.
-     * @param item The item to be place
+     * @param element The element to be place
      * @param times How many items to be placed.
      * @throws InterruptedException When reaches too many tries
      */
-    private void setRandom(Item item, int times) throws InterruptedException {
+    private void setRandom(Environment.Element element, int times) throws InterruptedException {
         Random random = new Random();
         int tries = 0;
         // Set the starting point neighbors as safe
@@ -185,19 +185,19 @@ public class World {
 
         for(int i = 0; i < times; i++) {
             Tile position;
-            // Find an empty block to set the item
+            // Find an empty block to set the element
             while (true) {
                 int z = random.nextInt(width * height - 1);
                 position = tiles[z];
                 if(position.isEmpty() &&
                         z != safeBlocks[0] && z != safeBlocks[1]  && z != safeBlocks[2]  &&
                         z != safeBlocks[3]) {
-                    position.setItem(item);
+                    position.setItem(element);
                     break;
                 }
                 // Do not loop forever
                 if (tries >= RANDOM_MAX_TRIES) {
-                    throw new InterruptedException("Cannot set a random position for item after " +
+                    throw new InterruptedException("Cannot set a random position for element after " +
                             "many tries, increase the world dimensions.");
                 } else {
                     tries++;
@@ -280,10 +280,10 @@ public class World {
         player.reset();
         // Set the dangers
         if (randomize) {
-            setRandom(Item.WUMPUS, wumpus);
-            setRandom(Item.PIT, pits);
+            setRandom(Element.WUMPUS, wumpus);
+            setRandom(Environment.Element.PIT, pits);
             // Set the objective
-            setRandom(Item.GOLD, gold);
+            setRandom(Element.GOLD, gold);
         } else {
             for (int index : items.keySet()) {
                 Tile tile = getPosition(index);
@@ -317,7 +317,7 @@ public class World {
                         default:
                             Tile tile = getPosition(x, y);
                             String line = " 1 |";
-                            if (tile.contains(Item.HUNTER)) {
+                            if (tile.contains(Element.HUNTER)) {
                                 line = line.replace("1", Environment.getIcon(player));
                             }
                             // Erase any non-replaced items
@@ -366,20 +366,20 @@ public class World {
                             String line = " 1 2 |";
                             if (z == 1) {
                                 // Renders the second line
-                                if (tile.contains(Item.WUMPUS)) {
-                                    line = line.replace("2", Environment.getIcon(Item.WUMPUS));
+                                if (tile.contains(Environment.Element.WUMPUS)) {
+                                    line = line.replace("2", Environment.getIcon(Environment.Element.WUMPUS));
                                 }
-                                if (tile.contains(Item.PIT)) {
-                                    line = line.replace("2", Environment.getIcon(Item.PIT));
+                                if (tile.contains(Environment.Element.PIT)) {
+                                    line = line.replace("2", Environment.getIcon(Element.PIT));
                                 }
-                                if (tile.contains(Item.GOLD)) {
-                                    line = line.replace("2", Environment.getIcon(Item.GOLD));
+                                if (tile.contains(Environment.Element.GOLD)) {
+                                    line = line.replace("2", Environment.getIcon(Element.GOLD));
                                 }
                             } else {
-                                if (tile.contains(Item.HUNTER)) {
+                                if (tile.contains(Environment.Element.HUNTER)) {
                                     line = line.replace("1", Environment.getIcon(player));
                                 }
-                                if (tile.contains(Item.GOLD)) {
+                                if (tile.contains(Environment.Element.GOLD)) {
                                     line = line.replace("2",
                                             Environment.getIcon(Perception.GLITTER));
                                 }
@@ -388,11 +388,11 @@ public class World {
                                 for (int s = 0; s < neighbors.length; s++) {
                                     if (neighbors[s] == -1) continue;
                                     Tile neighbor = getPosition(neighbors[s]);
-                                    if (neighbor.contains(Item.WUMPUS)) {
+                                    if (neighbor.contains(Element.WUMPUS)) {
                                         line = line.replace("2",
                                                 Environment.getIcon(Perception.STENCH));
                                     }
-                                    if (neighbor.contains(Item.PIT)) {
+                                    if (neighbor.contains(Environment.Element.PIT)) {
                                         line = line.replace("2",
                                                 Environment.getIcon(Perception.BREEZE));
                                     }

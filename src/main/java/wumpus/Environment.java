@@ -7,9 +7,9 @@ import java.util.Scanner;
  */
 public class Environment {
     /**
-     * The items that can be found at the world blocks.
+     * The elements that can be found at the tiles.
      */
-    public enum Item {
+    public enum Element {
         WUMPUS, PIT, HUNTER, GOLD
     }
 
@@ -24,7 +24,7 @@ public class Environment {
      * The actions that the player can take.
      */
     public enum Action {
-        GO_FORWARD, TURN_LEFT, TURN_RIGHT, GRAB, SHOOT_ARROW, NOOP, END
+        GO_FORWARD, TURN_LEFT, TURN_RIGHT, GRAB, SHOOT_ARROW, NOOP, EXIT
     }
 
     /**
@@ -77,12 +77,12 @@ public class Environment {
     }
 
     /**
-     * Returns the icon for a environment item.
-     * @param item The item
+     * Returns the icon for a environment element.
+     * @param element The element
      * @return The icon
      */
-    protected static String getIcon(Item item) {
-        switch (item) {
+    protected static String getIcon(Element element) {
+        switch (element) {
             case WUMPUS: return "W";
             case HUNTER: return "H";
             case PIT: return "P";

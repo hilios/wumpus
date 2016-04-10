@@ -309,8 +309,7 @@ public class HeuristicAgent implements Agent {
 
         return actions;
     }
-
-
+    
     /**
      * Returns the actions that player must take to reach the given destination.
      * @param player The player's instance

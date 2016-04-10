@@ -3,7 +3,7 @@ package wumpus;
 import java.util.ArrayList;
 
 import wumpus.Environment.Action;
-import wumpus.Environment.Item;
+import wumpus.Environment.Element;
 import wumpus.Environment.Perception;
 
 /**
@@ -76,15 +76,15 @@ public class Player extends Object {
     protected void setTile(int index) {
         // Remove the Hunter from the
         if (tile != null) {
-            tile.remove(Item.HUNTER);
+            tile.remove(Element.HUNTER);
         }
         tile = world.getPosition(index);
-        tile.setItem(Item.HUNTER);
+        tile.setItem(Environment.Element.HUNTER);
         // 2D coordinates
         x = tile.getX();
         y = tile.getY();
         // Check if player is still alive
-        alive = !(tile.contains(Item.WUMPUS) || tile.contains(Item.PIT));
+        alive = !(tile.contains(Element.WUMPUS) || tile.contains(Element.PIT));
     }
 
     /**
@@ -118,8 +118,8 @@ public class Player extends Object {
                     break;
             }
             // Hear a scream after if killed Wumpus
-            if (neighbor != null && neighbor.contains(Item.WUMPUS)) {
-                neighbor.remove(Item.WUMPUS);
+            if (neighbor != null && neighbor.contains(Element.WUMPUS)) {
+                neighbor.remove(Element.WUMPUS);
                 // Add the Scream to the current perception
                 return Perception.SCREAM;
             }
@@ -176,8 +176,8 @@ public class Player extends Object {
                 break;
             case GRAB:
                 // If tile has gold store and remove from the tile
-                if (tile.contains(Item.GOLD)) {
-                    tile.remove(Item.GOLD);
+                if (tile.contains(Element.GOLD)) {
+                    tile.remove(Element.GOLD);
                     gold = true;
                 }
                 break;
@@ -229,7 +229,7 @@ public class Player extends Object {
     protected void setPerceptions() {
         perceptions.clear();
         // Senses in the current tile
-        if (tile.contains(Item.GOLD)) {
+        if (tile.contains(Environment.Element.GOLD)) {
             perceptions.add(Perception.GLITTER);
         }
         // Get the neighbors and find the senses
@@ -246,11 +246,11 @@ public class Player extends Object {
             } else {
                 Tile neighbor = world.getPosition(neighbors[i]);
                 // Sense a breeze when near a pit
-                if (neighbor.contains(Item.PIT)) {
+                if (neighbor.contains(Element.PIT)) {
                     perceptions.add(Perception.BREEZE);
                 }
                 // Sense a stench when near a Wumpus
-                if (neighbor.contains(Item.WUMPUS)) {
+                if (neighbor.contains(Element.WUMPUS)) {
                     perceptions.add(Perception.STENCH);
                 }
             }

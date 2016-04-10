@@ -2,14 +2,14 @@ package wumpus;
 
 import java.util.HashSet;
 
-import wumpus.Environment.Item;
+import wumpus.Environment.Element;
 
 /**
  * Describes a single board block, that holds information on what have in.
  */
 public class Tile {
     private int x, y, w, h;
-    private HashSet<Item> items = new HashSet<Item>();
+    private HashSet<Environment.Element> elements = new HashSet<Element>();
 
     /**
      * The Tile constructor.
@@ -76,42 +76,42 @@ public class Tile {
     }
 
     /**
-     * Resets all items on this block.
+     * Resets all elements on this block.
      */
     public void clear() {
-        items.clear();
+        elements.clear();
     }
 
     /**
      * Resets some type of item on this block if has on it.
      * @param item The item to remove
      */
-    public void remove(Item item) {
-        items.remove(item);
+    public void remove(Environment.Element item) {
+        elements.remove(item);
     }
 
     /**
      * Returns weather this block is empty or not.
-     * @return <tt>true</tt> if contains no items
+     * @return <tt>true</tt> if contains no elements
      */
     public boolean isEmpty() {
-        return items.isEmpty();
+        return elements.isEmpty();
     }
 
     /**
-     * Returns weather this block contains the item or not.
-     * @param item The item to find
-     * @return <tt>true</tt> if not contains the given item
+     * Returns weather this block contains the element or not.
+     * @param element The element to find
+     * @return <tt>true</tt> if not contains the given element
      */
-    public boolean contains(Item item) {
-        return items.contains(item);
+    public boolean contains(Element element) {
+        return elements.contains(element);
     }
 
     /**
-     * Adds an item to this block.
-     * @param item The item
+     * Adds an element to this block.
+     * @param element The element
      */
-    public void setItem(Item item)  {
-        items.add(item);
+    public void setItem(Element element)  {
+        elements.add(element);
     }
 }

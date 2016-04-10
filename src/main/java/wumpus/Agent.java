@@ -24,5 +24,4 @@ public interface Agent {
      * @param player The player instance
      */
     void afterAction(Player player);
-
 }
