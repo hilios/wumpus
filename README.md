@@ -1,7 +1,7 @@
-Wumpus
-======
+Hunt the Wumpus
+===============
 
-Artificial intelligence agent for the Wumpus game.
+Artificial intelligence agent for the Hunt the Wumpus game.
 
 
 AI Agent
@@ -145,6 +145,12 @@ System.out.println(world.renderAll());
 | →   |     |   ≈ |     |
 +-----+-----+-----+-----+
 ```
+
+### Disclaimer
+
+This game structure and implementation is based on the Wumpus Lite v0.21a of James P. Biagioni of the University of Illinois at Chicago.
+
+Available at [https://www.cs.uic.edu/~jbiagion/wumpuslite.html](https://www.cs.uic.edu/~jbiagion/wumpuslite.html).
 
 ### License
 
