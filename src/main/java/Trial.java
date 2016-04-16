@@ -12,11 +12,13 @@ import wumpus.World;
  */
 public class Trial {
     private static final String DEFAULT_REPORT_FOLDER = "./target/trial-reports";
-    private static final int TRIALS = 1000;
+    private static final int TRIALS = 10000;
 
     public static void main(String[] args) throws Exception {
         // Create a 4x4 world
         final World world = new World(4, 4);
+
+        long executionTime = System.currentTimeMillis();
 
         // Trial for HeuristicAgent
         new Trial("HeuristicAgent", world, new TrialAgent() {
@@ -36,7 +38,9 @@ public class Trial {
             }
         });
 
-        System.out.println("FINISHED!");
+        executionTime = System.currentTimeMillis() - executionTime;
+
+        System.out.format("Finished in %dms.", executionTime);
     }
 
     /**
